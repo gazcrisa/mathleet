@@ -20,15 +20,15 @@ const MobileMenu: React.FC = () => {
       <Menu>
         <MenuButton
           cursor="pointer"
-          padding="0px 6px"
+          padding="4px 6px"
           borderRadius={4}
-          _hover={{ outline: "1px solid", outlineColor: "rgb(129, 131, 132)" }}
+          _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
         >
           <Flex align="center">
             <Flex align="center">
-              <Icon fontSize={24} mr={1} color="gray.300" as={VscAccount} />
+              <Icon mr={1} color="gray.300" as={VscAccount} fontSize={{ base: "12pt", sm: "15pt" }}/>
             </Flex>
-            <ChevronDownIcon color="white" fontSize={20} />
+            {/* <ChevronDownIcon color="white" fontSize={20} /> */}
           </Flex>
         </MenuButton>
         <MenuList bg="#222" border="1px solid #444">

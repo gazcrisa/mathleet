@@ -43,7 +43,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
         _hover={{
           borderColor: "none",
         }}
-        width={"90%"}
+        width={{base: "98%", sm: "90%"}}
       >
         <Stack spacing={3} p="10px">
           <Text fontSize="16pt">{post.title}</Text>

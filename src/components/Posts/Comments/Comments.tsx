@@ -147,7 +147,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
   return (
     <Flex direction="column" bg="#222" justifyContent={"center"} align="center">
       <Flex
-        width="90%"
+        width={{base: "98%", sm: "90%"}}
         border="none"
         color="white"
         mt={"30px"}

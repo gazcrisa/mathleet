@@ -33,7 +33,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
       >
         <Flex align="center">
           <Flex align="center">
-            <Icon fontSize={24} mr={1} color="gray.300" as={VscAccount} />
+            <Icon
+              mr={1}
+              color="gray.300"
+              as={VscAccount}
+              fontSize={{ base: "12pt", sm: "15pt" }}
+            />
           </Flex>
           <ChevronDownIcon color="white" fontSize={20} />
         </Flex>

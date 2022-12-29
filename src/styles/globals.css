@@ -63,3 +63,7 @@ a {
 .ql-syntax {
   background-color: #111 !important;
 }
+
+.inputLeft {
+  top: 3px !important;
+}

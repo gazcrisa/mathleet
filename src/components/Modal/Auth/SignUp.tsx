@@ -50,9 +50,13 @@ const SignUp: React.FC<SignUpProps> = () => {
         name="email"
         placeholder="Email"
         type="email"
+        fontSize={{ base: "10pt", sm: "12pt" }}
         mb={2}
         onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{
+          color: "gray.500",
+          fontSize: { base: "10pt", sm: "12pt" },
+        }}
         _hover={{
           bg: "white",
           border: "1px solid",
@@ -70,10 +74,14 @@ const SignUp: React.FC<SignUpProps> = () => {
         required
         name="password"
         placeholder="Password"
+        fontSize={{ base: "10pt", sm: "12pt" }}
         type="password"
         mb={2}
         onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{
+          color: "gray.500",
+          fontSize: { base: "10pt", sm: "12pt" },
+        }}
         _hover={{
           bg: "white",
           border: "1px solid",
@@ -91,10 +99,14 @@ const SignUp: React.FC<SignUpProps> = () => {
         required
         name="confirmPassword"
         placeholder="Confirm Password"
+        fontSize={{ base: "10pt", sm: "12pt" }}
         type="password"
         mb={2}
         onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{
+          color: "gray.500",
+          fontSize: { base: "10pt", sm: "12pt" },
+        }}
         _hover={{
           bg: "white",
           border: "1px solid",

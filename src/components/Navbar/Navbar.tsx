@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Image, Stack, Text } from "@chakra-ui/react";
+import { Flex, Image, Stack } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/clientApp";
@@ -19,22 +19,20 @@ const Navbar: React.FC = () => {
       <Flex
         align="center"
         width={{ base: "40px", md: "auto" }}
-        mr={{ base: 2 }}
+        mr={{ base: 1, sm: 2 }}
         cursor="pointer"
         onClick={() => {}}
       >
-        <Stack direction="row" align="center">
-          <Image
-            display={{ base: "none", md: "unset" }}
-            src="/images/Logo_mathleet_blue_white.png"
-            height="26px"
-          />
-        </Stack>
+        <Image
+          display={{ base: "none", md: "unset" }}
+          src="/images/Logo_mathleet_blue_white.png"
+          height="26px"
+        />
 
         <Image
           display={{ sm: "flex", md: "none" }}
           src="/images/Logo_mathleet_blue_favicon.png"
-          height="36px"
+          height="24px"
         />
       </Flex>
       <SearchInput user={user as User} />

@@ -5,6 +5,7 @@ import AuthModal from "../../Modal/Auth/AuthModal";
 import AuthButtons from "./AuthButtons";
 import Icons from "./Icons";
 import UserMenu from "./UserMenu";
+import MobileMenu from "./MobileMenu";
 
 type RightContentProps = {
   user: User;
@@ -15,8 +16,8 @@ const RightContent: React.FC<RightContentProps> = ({ user }) => {
     <>
       <AuthModal />
       <Flex justifyContent="space-between" alignItems="center">
-        {user ? <UserMenu user={user} />: <AuthButtons />}
-
+        {!user && <AuthButtons />}
+        {user ? <UserMenu user={user} /> : <MobileMenu />}
       </Flex>
     </>
   );

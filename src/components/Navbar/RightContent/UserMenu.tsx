@@ -12,7 +12,7 @@ import { signOut, User } from "firebase/auth";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin } from "react-icons/md";
 import { auth } from "../../../firebase/clientApp";
-import { BiUserCircle } from "react-icons/bi";
+import { VscAccount } from "react-icons/vsc";
 
 type UserMenuProps = {
   user?: User | null;
@@ -29,15 +29,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         cursor="pointer"
         padding="0px 6px"
         borderRadius={4}
-        _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
+        _hover={{ outline: "1px solid", outlineColor: "rgb(129, 131, 132)" }}
       >
         <Flex align="center">
           <Flex align="center">
-            {user && (
-              <>
-                <Icon fontSize={30} mr={1} color="gray.300" as={BiUserCircle} />
-              </>
-            )}
+            <Icon fontSize={24} mr={1} color="gray.300" as={VscAccount} />
           </Flex>
           <ChevronDownIcon color="white" fontSize={20} />
         </Flex>

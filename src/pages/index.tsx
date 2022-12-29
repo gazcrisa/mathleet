@@ -19,7 +19,7 @@ export default function Home() {
       setShowEmailWarning(false);
       setShowSuccess(false);
       return;
-    };
+    }
     setShowEmailWarning(!user.emailVerified);
   }, [user]);
 
@@ -33,12 +33,14 @@ export default function Home() {
   return (
     <PageContent>
       <>
-      {console.log("rendered home page, showAlert?", showEmailWarning)}
         {showEmailWarning && (
-          <EmailVerificationAlert handleResend={handleResend} setShowEmailWarning={setShowEmailWarning}/>
+          <EmailVerificationAlert
+            handleResend={handleResend}
+            setShowEmailWarning={setShowEmailWarning}
+          />
         )}
-        {showSuccess && <EmailVerificationResend/>}
-        <CreatePostLink></CreatePostLink>
+        {showSuccess && <EmailVerificationResend />}
+        {user && <CreatePostLink />}
         <Posts />
       </>
       <>

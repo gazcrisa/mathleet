@@ -30,7 +30,6 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       align="center"
       height="75px"
       borderRadius={4}
-      border="1px solid #444"
       bg="#222"
       p={2}
       mb={4}

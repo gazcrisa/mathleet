@@ -23,14 +23,14 @@ const CommentInput: React.FC<CommentInputProps> = ({
     <Flex
       direction="column"
       position="relative"
-      mt={8}
       borderBottom="1px"
       borderColor="#444"
       paddingBottom={"20px"}
+      width="100%"
     >
       {user ? (
         <>
-          <Text mb={1} color="rgb(129, 131, 132)">
+          <Text mb={1} color="rgb(129, 131, 132)" fontSize="10pt">
             Commenting as
             <span style={{ color: "#3182CE", marginLeft: "5px" }}>
               {user?.email?.split("@")[0]}

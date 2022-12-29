@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
           <Image
             display={{ base: "none", md: "unset" }}
             src="/images/Logo_mathleet_blue_white.png"
-            height="26px"
+            height="22px"
           />
 
           <Image

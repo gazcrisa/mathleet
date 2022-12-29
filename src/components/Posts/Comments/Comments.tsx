@@ -145,66 +145,89 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
   }, [selectedPost]);
 
   return (
-    <Box bg="#222" borderRadius="0px 0px 4px 4px" p={2}>
+    <Flex direction="column" bg="#222" justifyContent={"center"} align="center">
       <Flex
-        direction="column"
-        pl={10}
-        pr={4}
-        mb={6}
-        fontSize="10pt"
-        width="100%"
+        width="90%"
+        border="none"
+        color="white"
+        mt={"30px"}
+        padding={"0px 10px"}
+        borderRadius={"4px 4px 0px 0px"}
+        _hover={{
+          borderColor: "none",
+        }}
       >
-        {!fetchLoading && (
-          <CommentInput
-            commentText={commentText}
-            setCommentText={setCommentText}
-            user={user}
-            createLoading={createLoading}
-            onCreateComment={onCreateComment}
-          />
-        )}
+      {!fetchLoading && (
+        <CommentInput
+          commentText={commentText}
+          setCommentText={setCommentText}
+          user={user}
+          createLoading={createLoading}
+          onCreateComment={onCreateComment}
+        />
+      )}
       </Flex>
-      <Stack spacing={6} p={2}>
-        {fetchLoading ? (
-          <>
-            {[0, 1, 2].map((item) => (
-              <Box key={item} padding="6" bg="#333">
-                <SkeletonCircle size="10" />
-                <SkeletonText mt="4" noOfLines={2} spacing="4"/>
-              </Box>
-            ))}
-          </>
-        ) : (
-          <>
-            {comments.length === 0 ? (
-              <Flex
-                direction="column"
-                justify="center"
-                align="center"
-                borderColor="gray.100"
-                p={20}
-              >
-                <Text fontWeight={700} opacity={0.3} color={"gray.200"}>
-                  No Comments Yet
-                </Text>
-              </Flex>
-            ) : (
-              <>
-                {comments.map((comment) => (
-                    <CommentItem
-                      key={comment.id}
-                      comment={comment}
-                      onDeleteComment={onDeleteComment}
-                      loadingDelete={loadingDeleteId === comment.id}
-                      userId={user?.uid}
-                    />
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </Stack>
-    </Box>
+    </Flex>
+    // <Box bg="#222" borderRadius="0px 0px 4px 4px" p={2}>
+    //   <Flex
+    //     direction="column"
+    //     pl={10}
+    //     pr={4}
+    //     mb={6}
+    //     fontSize="10pt"
+    //     width="100%"
+    //   >
+    //     {!fetchLoading && (
+    //       <CommentInput
+    //         commentText={commentText}
+    //         setCommentText={setCommentText}
+    //         user={user}
+    //         createLoading={createLoading}
+    //         onCreateComment={onCreateComment}
+    //       />
+    //     )}
+    //   </Flex>
+    //   <Stack spacing={6} p={2}>
+    //     {fetchLoading ? (
+    //       <>
+    //         {[0, 1, 2].map((item) => (
+    //           <Box key={item} padding="6" bg="#333">
+    //             <SkeletonCircle size="10" />
+    //             <SkeletonText mt="4" noOfLines={2} spacing="4"/>
+    //           </Box>
+    //         ))}
+    //       </>
+    //     ) : (
+    //       <>
+    //         {comments.length === 0 ? (
+    //           <Flex
+    //             direction="column"
+    //             justify="center"
+    //             align="center"
+    //             borderColor="gray.100"
+    //             p={20}
+    //           >
+    //             <Text fontWeight={700} opacity={0.3} color={"gray.200"}>
+    //               No Comments Yet
+    //             </Text>
+    //           </Flex>
+    //         ) : (
+    //           <>
+    //             {comments.map((comment) => (
+    //                 <CommentItem
+    //                   key={comment.id}
+    //                   comment={comment}
+    //                   onDeleteComment={onDeleteComment}
+    //                   loadingDelete={loadingDeleteId === comment.id}
+    //                   userId={user?.uid}
+    //                 />
+    //             ))}
+    //           </>
+    //         )}
+    //       </>
+    //     )}
+    //   </Stack>
+    // </Box>
   );
 };
 export default Comments;

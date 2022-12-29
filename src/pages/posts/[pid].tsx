@@ -10,6 +10,7 @@ import PostItem from "../../components/Posts/PostItem";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import Comments from "../../components/Posts/Comments/Comments";
+import SinglePost from "../../components/Posts/SinglePost";
 
 const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -39,8 +40,21 @@ const PostPage: React.FC = () => {
   return (
     <PageContent>
       <>
-        {postStateValue.selectedPost && (
+        {/* {postStateValue.selectedPost && (
           <PostItem
+            post={postStateValue.selectedPost}
+            onVote={onVote}
+            onDeletePost={onDeletePost}
+            userVoteValue={
+              postStateValue.postVotes.find(
+                (item) => item.postId === postStateValue.selectedPost?.id
+              )?.voteValue
+            }
+            userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
+          />
+        )} */}
+        {postStateValue.selectedPost && (
+          <SinglePost
             post={postStateValue.selectedPost}
             onVote={onVote}
             onDeletePost={onDeletePost}
@@ -58,7 +72,7 @@ const PostPage: React.FC = () => {
         />
       </>
       <>
-      <About/>
+        <About />
       </>
     </PageContent>
   );

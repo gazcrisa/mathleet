@@ -31,29 +31,29 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       borderRadius={4}
       bg="#222"
       p={2}
-      mb={4}
+      mb={{base: "1", sm: "2"}}
       onClick={onClick}
       cursor="pointer"
     >
-      <Icon as={MdPostAdd} fontSize={30} color="gray.400" mr={4} />
+      <Icon as={MdPostAdd} fontSize={{ base: "11pt", sm: "17pt" }} color="gray.400" mr={2} />
       <Input
         placeholder="Create Post"
         fontSize={{ base: "10pt", sm: "12pt" }}
         _placeholder={{ color: "#666" }}
         bg="#333"
         borderColor="#444"
-        height="50px"
+        height="40px"
         borderRadius={4}
         mr={4}
       />
       <Icon
         as={IoImageOutline}
-        fontSize={24}
         mr={4}
         color="gray.400"
+        fontSize={{ base: "11pt", sm: "15pt" }}
         cursor="pointer"
       />
-      <Icon as={BsLink45Deg} fontSize={24} color="gray.400" cursor="pointer" />
+      <Icon as={BsLink45Deg} color="gray.400" cursor="pointer" fontSize={{ base: "11pt", sm: "15pt" }}/>
     </Flex>
   );
 };

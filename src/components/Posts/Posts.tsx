@@ -1,18 +1,14 @@
 import { Stack } from "@chakra-ui/react";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Post, postState, PostVote } from "../../atoms/postsAtom";
+import { Post, PostVote } from "../../atoms/postsAtom";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import PostItem from "./PostItem";
 import PostLoader from "./PostLoader";
-import PostTabItem from "./PostTabItem";
 
-type PostsProps = {
-};
-
-const Posts: React.FC<PostsProps> = ({ }) => {
+const Posts: React.FC = ({ }) => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const {

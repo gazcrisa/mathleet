@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { Post } from "../../atoms/postsAtom";
 import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat } from "react-icons/bs";
-import { BiUpvote, BiDownvote } from "react-icons/bi";
 import { IoBookmark } from "react-icons/io5";
 import { RiChat1Fill } from "react-icons/ri";
 import { BiLike } from "react-icons/bi";
-import { IoBookmarkOutline } from "react-icons/io5";
 import {
   Alert,
   AlertIcon,
@@ -119,19 +116,11 @@ const PostItem: React.FC<PostItemProps> = ({
             </Alert>
           )}
           <Stack spacing={3} p="10px">
-            <Stack
-              direction="row"
-              spacing={0.6}
-              align="center"
-              fontSize="12pt"
-              color="#777"
-            >
-              <Flex align="center" justifyContent="center">
-                <Text marginRight={1} fontSize="10pt">
-                  Posted by {post.creatorDisplayName}
-                </Text>
-              </Flex>
-            </Stack>
+            <Flex align="center" justifyContent="flex-start" color="#777">
+              <Text marginRight={1} fontSize="10pt">
+                Posted by {post.creatorDisplayName}
+              </Text>
+            </Flex>
             <Text fontSize="16pt">{post.title}</Text>
             <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
             {post.imageURL && (
@@ -184,7 +173,12 @@ const PostItem: React.FC<PostItemProps> = ({
               _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
               cursor="pointer"
             >
-              <Icon as={RiChat1Fill} mr={1} fontSize={{ base: "11pt", sm: "15pt" }} color="#777" />
+              <Icon
+                as={RiChat1Fill}
+                mr={1}
+                fontSize={{ base: "11pt", sm: "15pt" }}
+                color="#777"
+              />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
                 {post.numberOfComments > 0 ? post.numberOfComments : "Comment"}
               </Text>
@@ -228,7 +222,12 @@ const PostItem: React.FC<PostItemProps> = ({
           _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
           cursor="pointer"
         >
-          <Icon as={IoBookmark} mr={1} fontSize={{ base: "11pt", sm: "15pt" }} color="#777" />
+          <Icon
+            as={IoBookmark}
+            mr={1}
+            fontSize={{ base: "11pt", sm: "15pt" }}
+            color="#777"
+          />
         </Flex>
       </Flex>
     </Flex>

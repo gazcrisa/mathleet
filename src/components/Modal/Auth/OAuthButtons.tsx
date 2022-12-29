@@ -17,11 +17,13 @@ const OAuthButtons: React.FC<OAuthButtonsProps> = () => {
       >
         <Image
           src="/images/googlelogo.png"
-          height="20px"
-          mr={4}
+          height={{ base: "18px", sm: "20px" }}
+          mr={{ base: 2, sm: 4 }}
           alt="No Image Available"
         />
-        Continue with Google
+        <Text fontSize={{ base: "10pt", sm: "12pt" }}>
+          Continue with Google
+        </Text>
       </Button>
       {error && <Text>{error.message}</Text>}
     </Flex>

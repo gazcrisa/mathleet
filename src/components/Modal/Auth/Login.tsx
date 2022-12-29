@@ -43,7 +43,7 @@ const Login: React.FC<LoginProps> = () => {
         type="email"
         mb={2}
         onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{ color: "gray.500", fontSize: {base: "10pt", sm: "12pt"} }}
         _hover={{
           bg: "white",
           border: "1px solid",
@@ -64,7 +64,7 @@ const Login: React.FC<LoginProps> = () => {
         type="password"
         mb={2}
         onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{ color: "gray.500", fontSize: {base: "10pt", sm: "12pt"} }}
         _hover={{
           bg: "white",
           border: "1px solid",

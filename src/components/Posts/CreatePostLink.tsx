@@ -3,8 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsLink45Deg } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
-import {MdPostAdd} from "react-icons/md";
+import { MdPostAdd } from "react-icons/md";
 import { IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
@@ -39,7 +38,7 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       <Icon as={MdPostAdd} fontSize={30} color="gray.400" mr={4} />
       <Input
         placeholder="Create Post"
-        fontSize="14pt"
+        fontSize={{ base: "10pt", sm: "12pt" }}
         _placeholder={{ color: "#666" }}
         bg="#333"
         borderColor="#444"

@@ -155,13 +155,13 @@ const PostItem: React.FC<PostItemProps> = ({
         <Flex
           align="center"
           justifyContent="space-between"
-          padding={"8px 10px"}
+          padding={"0px 10px"}
           width="100%"
         >
           <Stack direction="row">
             <Flex
               align="center"
-              p="8px 10px"
+              p="8px 8px"
               borderRadius={4}
               _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
               cursor="pointer"
@@ -169,7 +169,7 @@ const PostItem: React.FC<PostItemProps> = ({
               <Icon
                 as={BiLike}
                 mr={1}
-                fontSize="15pt"
+                fontSize={{ base: "11pt", sm: "15pt" }}
                 color={userVoteValue === 1 ? "brand.100" : "rgb(129, 131, 132)"}
                 onClick={(event) => onVote(event, post, 1, post.id)}
               />
@@ -184,7 +184,7 @@ const PostItem: React.FC<PostItemProps> = ({
               _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
               cursor="pointer"
             >
-              <Icon as={RiChat1Fill} mr={1} fontSize="16pt" color="#777" />
+              <Icon as={RiChat1Fill} mr={1} fontSize={{ base: "11pt", sm: "15pt" }} color="#777" />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
                 {post.numberOfComments > 0 ? post.numberOfComments : "Comment"}
               </Text>
@@ -205,10 +205,10 @@ const PostItem: React.FC<PostItemProps> = ({
                     <Icon
                       as={AiOutlineDelete}
                       mr={1}
-                      fontSize="16pt"
+                      fontSize={{ base: "11pt", sm: "15pt" }}
                       color="#777"
                     />
-                    <Text fontSize="11pt" fontWeight="700" color="#777">
+                    <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
                       Delete
                     </Text>
                   </>
@@ -228,7 +228,7 @@ const PostItem: React.FC<PostItemProps> = ({
           _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
           cursor="pointer"
         >
-          <Icon as={IoBookmark} mr={1} fontSize="15pt" color="#777" />
+          <Icon as={IoBookmark} mr={1} fontSize={{ base: "11pt", sm: "15pt" }} color="#777" />
         </Flex>
       </Flex>
     </Flex>

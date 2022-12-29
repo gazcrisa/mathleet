@@ -1,6 +1,8 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import React from "react";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "../../../atoms/authModalAtom";
 import AuthButtons from "../../Navbar/RightContent/AuthButtons";
 import TextEditor from "../../TextEditor/TextEditor";
 
@@ -19,12 +21,12 @@ const CommentInput: React.FC<CommentInputProps> = ({
   createLoading,
   onCreateComment,
 }) => {
+  const setAuthModalState = useSetRecoilState(authModalState);
+
   return (
     <Flex
       direction="column"
       position="relative"
-      borderBottom="1px"
-      borderColor="#444"
       paddingBottom={"20px"}
       width="100%"
     >
@@ -66,12 +68,16 @@ const CommentInput: React.FC<CommentInputProps> = ({
           borderRadius={2}
           border="1px solid"
           borderColor="#444"
-          p={4}
+          p={{ base: 3, sm: 4 }}
         >
-          <Text fontWeight={600} fontSize="14pt" color="gray.300" mr={4}>
+          <Text
+            fontSize={{ base: "10pt", sm: "14pt" }}
+            color="#3182CE"
+            onClick={() => setAuthModalState({ open: true, view: "login" })}
+            cursor="pointer"
+          >
             Log in or sign up to leave a comment
           </Text>
-          <AuthButtons />
         </Flex>
       )}
     </Flex>

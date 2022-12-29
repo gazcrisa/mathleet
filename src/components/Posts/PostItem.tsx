@@ -45,13 +45,13 @@ moment.locale("en", {
   relativeTime: {
     future: "in %s",
     past: "%s",
-    s: "seconds",
+    s: "1 second ago",
     ss: "%ss",
     m: "1m",
     mm: "%dm",
     h: "1h",
     hh: "%dh",
-    d: "1d",
+    d: "Yesterday",
     dd: "%dd",
     M: "a month",
     MM: "%dM",
@@ -216,7 +216,7 @@ const PostItem: React.FC<PostItemProps> = ({
               </Flex>
             )}
           </Stack>
-          <Text color={"#777"} fontSize={{ base: "10pt", sm: "11pt" }}>
+          <Text color={"#777"} fontSize={{ base: "8pt", sm: "10pt" }}>
             {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}
           </Text>
         </Flex>

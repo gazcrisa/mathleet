@@ -98,7 +98,7 @@ const PostItem: React.FC<PostItemProps> = ({
   };
 
   return (
-    <Flex direction="column" bg="#222">
+    <Flex direction="column" bg="#222" borderBottom="1px" borderColor="#444">
       <Flex
         border="none"
         color="white"

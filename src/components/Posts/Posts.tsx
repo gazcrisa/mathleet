@@ -53,7 +53,7 @@ const Posts: React.FC<PostsProps> = ({ }) => {
       {loading ? (
         <PostLoader />
       ) : (
-        <Stack>
+        <Stack spacing={{base: "1", md: "2"}}>
           {postStateValue.posts.map((item: Post) => (
             <PostItem
               key={item.id}

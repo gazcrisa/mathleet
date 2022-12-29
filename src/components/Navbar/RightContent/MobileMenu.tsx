@@ -26,7 +26,7 @@ const MobileMenu: React.FC = () => {
         >
           <Flex align="center">
             <Flex align="center">
-              <Icon mr={1} color="gray.300" as={VscAccount} fontSize={{ base: "14pt", sm: "15pt" }}/>
+              <Icon color="gray.300" as={VscAccount} fontSize={{ base: "15pt", sm: "17pt" }}/>
             </Flex>
             {/* <ChevronDownIcon color="white" fontSize={20} /> */}
           </Flex>

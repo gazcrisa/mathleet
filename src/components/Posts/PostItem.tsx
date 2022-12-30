@@ -116,7 +116,7 @@ const PostItem: React.FC<PostItemProps> = ({
           </Stack>
         </Flex>
       </Flex>
-      <Flex borderTop="1px solid" borderColor="#444" padding="0px 0px 0px 0px">
+      <Flex borderTop="0.5px solid" borderColor="#444" padding="0px 0px 0px 0px">
         <Flex
           align="center"
           justifyContent="space-between"
@@ -193,7 +193,7 @@ const PostItem: React.FC<PostItemProps> = ({
         <Flex
           align="center"
           p="8px 10px"
-          borderLeft="1px solid"
+          borderLeft="0.5px solid"
           borderColor="#444"
           _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
           cursor="pointer"

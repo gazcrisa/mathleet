@@ -3,7 +3,6 @@ import { User } from "firebase/auth";
 import React from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
-import AuthButtons from "../../Navbar/RightContent/AuthButtons";
 import TextEditor from "../../TextEditor/TextEditor";
 
 type CommentInputProps = {

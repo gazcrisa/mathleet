@@ -21,7 +21,6 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { authModalState } from "../../../atoms/authModalAtom";
 import { Post, postState } from "../../../atoms/postsAtom";
 import { firestore } from "../../../firebase/clientApp";
 import CommentInput from "./CommentInput";
@@ -178,7 +177,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
         _hover={{
           borderColor: "none",
         }}
-        borderTop="1px" 
+        borderTop="0.5px solid"
         borderColor="#444"
         paddingTop="26px"
       >
@@ -224,66 +223,6 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
         </Stack>
       </Flex>
     </Flex>
-    // <Box bg="#222" borderRadius="0px 0px 4px 4px" p={2}>
-    //   <Flex
-    //     direction="column"
-    //     pl={10}
-    //     pr={4}
-    //     mb={6}
-    //     fontSize="10pt"
-    //     width="100%"
-    //   >
-    //     {!fetchLoading && (
-    //       <CommentInput
-    //         commentText={commentText}
-    //         setCommentText={setCommentText}
-    //         user={user}
-    //         createLoading={createLoading}
-    //         onCreateComment={onCreateComment}
-    //       />
-    //     )}
-    //   </Flex>
-    //   <Stack spacing={6} p={2}>
-    //     {fetchLoading ? (
-    //       <>
-    //         {[0, 1, 2].map((item) => (
-    //           <Box key={item} padding="6" bg="#333">
-    //             <SkeletonCircle size="10" />
-    //             <SkeletonText mt="4" noOfLines={2} spacing="4"/>
-    //           </Box>
-    //         ))}
-    //       </>
-    //     ) : (
-    //       <>
-    //         {comments.length === 0 ? (
-    //           <Flex
-    //             direction="column"
-    //             justify="center"
-    //             align="center"
-    //             borderColor="gray.100"
-    //             p={20}
-    //           >
-    //             <Text fontWeight={700} opacity={0.3} color={"gray.200"}>
-    //               No Comments Yet
-    //             </Text>
-    //           </Flex>
-    //         ) : (
-    //           <>
-    //             {comments.map((comment) => (
-    //                 <CommentItem
-    //                   key={comment.id}
-    //                   comment={comment}
-    //                   onDeleteComment={onDeleteComment}
-    //                   loadingDelete={loadingDeleteId === comment.id}
-    //                   userId={user?.uid}
-    //                 />
-    //             ))}
-    //           </>
-    //         )}
-    //       </>
-    //     )}
-    //   </Stack>
-    // </Box>
   );
 };
 export default Comments;

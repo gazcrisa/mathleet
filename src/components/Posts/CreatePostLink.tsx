@@ -29,7 +29,7 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       borderRadius={4}
       bg="#222"
       p={2}
-      mb={{base: "1", sm: "2"}}
+      mb={{base: "1"}}
       onClick={onClick}
       cursor="pointer"
     >

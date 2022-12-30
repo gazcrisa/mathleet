@@ -54,7 +54,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   userId,
 }) => {
   return (
-    <Flex borderBottom={"1px"} borderColor={"#444"} paddingBottom={"12px"}>
+    <Flex borderBottom={"0.5px solid"} borderColor={"#444"} paddingBottom={"12px"}>
       <Stack spacing={2} p={"0px 20px"} width="100%">
         <Text marginRight={1} fontSize="10pt" color="gray.300">
           Posted by {comment.creatorDisplayText}

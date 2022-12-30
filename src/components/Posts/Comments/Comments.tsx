@@ -148,25 +148,80 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
   return (
     <Flex direction="column" bg="#222" justifyContent={"center"} align="center">
       <Flex
-        width={{base: "98%", sm: "90%"}}
+        direction="column"
+        width={{ base: "98%", sm: "90%" }}
         border="none"
         color="white"
-        mt={"30px"}
+        mt={"15px"}
         padding={"0px 10px"}
         borderRadius={"4px 4px 0px 0px"}
         _hover={{
           borderColor: "none",
         }}
       >
-      {!fetchLoading && (
-        <CommentInput
-          commentText={commentText}
-          setCommentText={setCommentText}
-          user={user}
-          createLoading={createLoading}
-          onCreateComment={onCreateComment}
-        />
-      )}
+        {!fetchLoading && (
+          <CommentInput
+            commentText={commentText}
+            setCommentText={setCommentText}
+            user={user}
+            createLoading={createLoading}
+            onCreateComment={onCreateComment}
+          />
+        )}
+      </Flex>
+      <Flex
+        direction="column"
+        width="100%"
+        border="none"
+        color="white"
+        mt={"15px"}
+        _hover={{
+          borderColor: "none",
+        }}
+        borderTop="1px" 
+        borderColor="#444"
+        paddingTop="26px"
+      >
+        <Stack spacing={6} p={0}>
+          {fetchLoading ? (
+            <>
+              {[0, 1, 2].map((item) => (
+                <Box key={item} padding="6" bg="#333">
+                  <SkeletonCircle size="10" />
+                  <SkeletonText mt="4" noOfLines={2} spacing="4" />
+                </Box>
+              ))}
+            </>
+          ) : (
+            <>
+              {comments.length === 0 ? (
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  borderColor="gray.100"
+                  p={20}
+                >
+                  <Text fontWeight={700} opacity={0.3} color={"gray.200"}>
+                    No Comments Yet
+                  </Text>
+                </Flex>
+              ) : (
+                <>
+                  {comments.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      onDeleteComment={onDeleteComment}
+                      loadingDelete={loadingDeleteId === comment.id}
+                      userId={user?.uid}
+                    />
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </Stack>
       </Flex>
     </Flex>
     // <Box bg="#222" borderRadius="0px 0px 4px 4px" p={2}>

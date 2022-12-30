@@ -51,7 +51,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
       const postDocRef = await addDoc(collection(firestore, "posts"), {
         creatorId: user?.uid,
         creatorDisplayName: user.email!.split("@")[0],
-        title: textInputs.title,
+        title: textInputs.title.charAt(0).toUpperCase() + textInputs.title.slice(1),
         body: textInputs.body,
         numberOfComments: 0,
         voteStatus: 0,

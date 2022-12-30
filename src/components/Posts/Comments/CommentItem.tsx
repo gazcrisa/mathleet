@@ -11,7 +11,7 @@ import { RiChat1Fill } from "react-icons/ri";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-moment.locale("en", {
+moment.updateLocale("en", {
   relativeTime: {
     future: "in %s",
     past: "%s",

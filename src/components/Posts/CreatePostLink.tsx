@@ -33,7 +33,7 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       onClick={onClick}
       cursor="pointer"
     >
-      <Icon as={MdPostAdd} fontSize={{ base: "14pt", sm: "22pt" }} color="gray.400" mr={2} />
+      <Icon as={MdPostAdd} fontSize={{ base: "18pt", sm: "22pt" }} color="gray.400" mr={2} />
       <Input
         placeholder="Create Post"
         fontSize={{ base: "10pt", sm: "12pt" }}

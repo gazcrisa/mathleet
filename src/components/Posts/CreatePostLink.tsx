@@ -2,9 +2,7 @@ import { Flex, Icon, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { BsLink45Deg } from "react-icons/bs";
 import { MdPostAdd } from "react-icons/md";
-import { IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
 import { auth } from "../../firebase/clientApp";
@@ -35,7 +33,7 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       onClick={onClick}
       cursor="pointer"
     >
-      <Icon as={MdPostAdd} fontSize={{ base: "11pt", sm: "17pt" }} color="gray.400" mr={2} />
+      <Icon as={MdPostAdd} fontSize={{ base: "14pt", sm: "22pt" }} color="gray.400" mr={2} />
       <Input
         placeholder="Create Post"
         fontSize={{ base: "10pt", sm: "12pt" }}
@@ -43,17 +41,10 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
         bg="#333"
         borderColor="#444"
         height="40px"
+        width="90%"
         borderRadius={4}
         mr={4}
       />
-      <Icon
-        as={IoImageOutline}
-        mr={4}
-        color="gray.400"
-        fontSize={{ base: "11pt", sm: "15pt" }}
-        cursor="pointer"
-      />
-      <Icon as={BsLink45Deg} color="gray.400" cursor="pointer" fontSize={{ base: "11pt", sm: "15pt" }}/>
     </Flex>
   );
 };

@@ -62,7 +62,6 @@ const PostItem: React.FC<PostItemProps> = ({
   onVote,
   onDeletePost,
 }) => {
-  const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [error, setError] = useState(false);
 
@@ -107,7 +106,7 @@ const PostItem: React.FC<PostItemProps> = ({
             </Alert>
           )}
           <Stack spacing={3} p="10px">
-            <Flex align="center" justifyContent="flex-start" color="#777">
+            <Flex align="center" justifyContent="flex-start" color="#777" paddingTop="8px">
               <Text marginRight={1} fontSize="10pt">
                 Posted by {post.creatorDisplayName}
               </Text>

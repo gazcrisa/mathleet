@@ -15,14 +15,13 @@ const Posts: React.FC = ({ }) => {
     postStateValue,
     setPostStateValue,
     onVote,
-    onSelectPost,
     onDeletePost,
   } = usePosts();
 
   const getPosts = async () => {
     setLoading(true);
     try {
-      // get posts for this community
+      // get posts
       const postsQuery = query(
         collection(firestore, "posts"),
         orderBy("createdAt", "desc")
@@ -33,7 +32,6 @@ const Posts: React.FC = ({ }) => {
         ...prev,
         posts: posts as Post[],
       }));
-      console.log("posts", posts);
     } catch (error: any) {
       console.log("getPosts error", error.message);
     }
@@ -60,7 +58,6 @@ const Posts: React.FC = ({ }) => {
                   ?.voteValue
               }
               onVote={onVote}
-              onSelectPost={onSelectPost}
               onDeletePost={onDeletePost}
             />
           ))}

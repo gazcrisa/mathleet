@@ -6,7 +6,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Post } from "../../atoms/postsAtom";
 import About from "../../components/About";
 import PageContent from "../../components/Layout/PageContent";
-import PostItem from "../../components/Posts/PostItem";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import Comments from "../../components/Posts/Comments/Comments";
@@ -33,27 +32,12 @@ const PostPage: React.FC = () => {
 
   useEffect(() => {
     const { pid } = router.query;
-    if (pid && !postStateValue.selectedPost) {
-      fetchPost(pid as string);
-    }
-  }, [router.query, postStateValue.selectedPost]);
+    fetchPost(pid as string);
+  }, [router.query]);
   return (
     <PageContent>
-      <>
-        {/* {postStateValue.selectedPost && (
-          <PostItem
-            post={postStateValue.selectedPost}
-            onVote={onVote}
-            onDeletePost={onDeletePost}
-            userVoteValue={
-              postStateValue.postVotes.find(
-                (item) => item.postId === postStateValue.selectedPost?.id
-              )?.voteValue
-            }
-            userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
-          />
-        )} */}
-        {postStateValue.selectedPost && (
+      {postStateValue.selectedPost && (
+        <>
           <SinglePost
             post={postStateValue.selectedPost}
             onVote={onVote}
@@ -65,12 +49,13 @@ const PostPage: React.FC = () => {
             }
             userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
           />
-        )}
-        <Comments
-          user={user as User}
-          selectedPost={postStateValue.selectedPost}
-        />
-      </>
+
+          <Comments
+            user={user as User}
+            selectedPost={postStateValue.selectedPost}
+          />
+        </>
+      )}
       <>
         <About />
       </>

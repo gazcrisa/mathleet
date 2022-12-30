@@ -7,7 +7,6 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -17,7 +16,6 @@ import { auth, firestore, storage } from "../firebase/clientApp";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
-  const router = useRouter();
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const setAuthModalState = useSetRecoilState(authModalState);
 
@@ -134,14 +132,6 @@ const usePosts = () => {
     }
   };
 
-  const onSelectPost = (post: Post) => {
-    setPostStateValue((prev) => ({
-      ...prev,
-      selectedPost: post,
-    }));
-    router.push(`/posts/${post.id}`);
-  };
-
   const onDeletePost = async (post: Post): Promise<boolean> => {
     try {
       // check if image, delete if exists
@@ -199,7 +189,6 @@ const usePosts = () => {
     postStateValue,
     setPostStateValue,
     onVote,
-    onSelectPost,
     onDeletePost,
   };
 };

@@ -9,8 +9,6 @@ import {
   AlertIcon,
   Flex,
   Icon,
-  Image,
-  Skeleton,
   Spinner,
   Stack,
   Text,
@@ -63,15 +61,12 @@ const PostItem: React.FC<PostItemProps> = ({
   userVoteValue,
   onVote,
   onDeletePost,
-  onSelectPost,
-  homePage,
 }) => {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const router = useRouter();
-  const singlePostPage = !onSelectPost;
-
   const [error, setError] = useState(false);
+
+  const router = useRouter();
 
   const handleDelete = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -84,10 +79,6 @@ const PostItem: React.FC<PostItemProps> = ({
       if (!success) {
         throw new Error("Failed to delete post");
       }
-
-      if (singlePostPage) {
-        router.push(`/`);
-      }
     } catch (error: any) {
       setError(error.message);
     }
@@ -99,14 +90,14 @@ const PostItem: React.FC<PostItemProps> = ({
       <Flex
         border="none"
         color="white"
-        padding={"0px 10px 20px"}
-        borderRadius={singlePostPage ? "4px 4px 0px 0px" : "4px"}
+        padding="0px 10px 20px"
+        borderRadius="4px"
         _hover={{
-          borderColor: singlePostPage ? "none" : "gray",
+          borderColor: "gray",
           transition: "700ms",
         }}
-        cursor={singlePostPage ? "unset" : "pointer"}
-        onClick={() => onSelectPost && onSelectPost(post)}
+        cursor="pointer"
+        onClick={() => router.push(`/posts/${post.id}`)}
       >
         <Flex direction="column" width="100%">
           {error && (
@@ -123,20 +114,6 @@ const PostItem: React.FC<PostItemProps> = ({
             </Flex>
             <Text fontSize="16pt">{post.title}</Text>
             <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
-            {post.imageURL && (
-              <Flex justify="center" align="center" p={2}>
-                {loadingImage && (
-                  <Skeleton height="200px" width="100%" borderRadius={4} />
-                )}
-                <Image
-                  src={post.imageURL}
-                  maxHeight="460px"
-                  alt="Post Image"
-                  display={loadingImage ? "none" : "unset"}
-                  onLoad={() => setLoadingImage(false)}
-                />
-              </Flex>
-            )}
           </Stack>
         </Flex>
       </Flex>

@@ -15,16 +15,6 @@ const SubmitPostPage: React.FC<SubmitPostPageProps> = () => {
     <PageContent>
       <>
         <Flex direction="column">
-          <Box p="14px" bg="#222" borderBottom="1px solid" borderColor="#444">
-            <Text
-              fontSize="22px"
-              fontWeight="500"
-              lineHeight="22px"
-              color="gray.300"
-            >
-              Create a post
-            </Text>
-          </Box>
           {user && <NewPostForm user={user} />}
         </Flex>
       </>

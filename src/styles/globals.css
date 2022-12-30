@@ -37,7 +37,7 @@ a {
 .ql-editor {
   color: #cbd5e0;
   font-size: 16px !important;
-  min-height: 8em !important;
+  min-height: 12em !important;
   line-height: 26px !important;
   /* padding: 0px !important; */
 }

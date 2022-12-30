@@ -5,7 +5,6 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
-import CommentInput from "./Comments/CommentInput";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -20,17 +19,11 @@ type SinglePostProps = {
     communityId: string
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
-  onSelectPost?: (post: Post) => void;
   homePage?: boolean;
 };
 
 const SinglePost: React.FC<SinglePostProps> = ({
-  post,
-  userIsCreator,
-  userVoteValue,
-  onVote,
-  onDeletePost,
-  onSelectPost,
+  post
 }) => {
   return (
     <Flex direction="column" bg="#222" justifyContent={"center"} align="center">

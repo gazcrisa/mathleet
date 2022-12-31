@@ -17,6 +17,7 @@ a {
 .quill {
   display: flex !important;
   flex-direction: column !important;
+  width: 100%;
 }
 
 .quill:focus-within {

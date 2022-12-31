@@ -44,7 +44,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
           />
           <Flex justify="flex-end">
             <Button
-              height={{ base: "16px", sm: "20px" }}
+              height="34px"
               fontSize={{ base: "10pt", sm: "12pt" }}
               padding={{ base: 3, sm: 4 }}
               mt={4}

@@ -39,14 +39,15 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
-  const [createLoading, setCreateLoading] = useState(false);
+  const [createCommentLoading, setCreateCommentLoading] = useState(false);
+  const [createReplyLoading, setCreateReplyLoading] = useState(false);
   const [loadingDeleteId, setLoadingDeleteId] = useState("");
   const setPostState = useSetRecoilState(postState);
 
   const onCreateComment = async (commentText: string) => {
     // create a comment document
     // update post numberOfComments
-    setCreateLoading(true);
+    setCreateCommentLoading(true);
     try {
       const batch = writeBatch(firestore);
 
@@ -89,11 +90,11 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
     } catch (error) {
       console.log("onCreateComment error", error);
     }
-    setCreateLoading(false);
+    setCreateCommentLoading(false);
   };
 
   const onCreateReply = async (replyText: string, parentId: string) => {
-    setCreateLoading(true);
+    setCreateReplyLoading(true);
     try {
       const batch = writeBatch(firestore);
 
@@ -138,9 +139,9 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
         } as Post,
       }));
     } catch (error) {
-      console.log("onCreateComment error", error);
+      console.log("onCreateReplyError", error);
     }
-    setCreateLoading(false);
+    setCreateReplyLoading(false);
   };
 
   const onDeleteComment = async (comment: any) => {
@@ -219,7 +220,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
             commentText={commentText}
             setCommentText={setCommentText}
             user={user}
-            createLoading={createLoading}
+            createLoading={createCommentLoading}
             onCreateComment={onCreateComment}
           />
         )}
@@ -269,6 +270,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
                       loadingDelete={loadingDeleteId === comment.id}
                       userId={user?.uid}
                       onCreateReply={onCreateReply}
+                      createReplyLoading={createReplyLoading}
                     />
                   ))}
                 </>

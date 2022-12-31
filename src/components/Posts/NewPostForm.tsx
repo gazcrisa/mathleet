@@ -43,17 +43,15 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   const handleCreatePost = async () => {
     // create new post obect => type Post
     setLoading(true);
-    console.log("title", textInputs.title);
-    console.log("body", textInputs.body);
     try {
       // write the new post to the db
       await addDoc(collection(firestore, "posts"), {
-        creatorId: user?.uid,
-        creatorDisplayName: user.email!.split("@")[0],
+        creatorId: user.uid,
+        creatorDisplayName: user.displayName ? user.displayName : 'Anonymous',
         title:
           textInputs.title.charAt(0).toUpperCase() + textInputs.title.slice(1),
         body: textInputs.body,
-        numberOfComments: 0,
+        numComments: 0,
         likes: [],
         createdAt: serverTimestamp() as Timestamp,
       });

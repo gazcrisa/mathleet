@@ -37,7 +37,7 @@ moment.updateLocale("en", {
   relativeTime: {
     future: "in %s",
     past: "%s",
-    s: "1 second ago",
+    s: "Just Now",
     ss: "%ss",
     m: "1m",
     mm: "%dm",
@@ -150,7 +150,7 @@ const PostItem: React.FC<PostItemProps> = ({
                 color="#777"
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                {post.numberOfComments}
+                {post.numComments}
               </Text>
             </Flex>
             {userIsCreator && (

@@ -7,7 +7,7 @@ export type Post = {
   creatorDisplayName: string;
   title: string;
   body: string;
-  numberOfComments: number;
+  numComments: number;
   likes: string[];
   imageURL?: string;
   createdAt: Timestamp;

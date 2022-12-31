@@ -110,7 +110,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
                 color="#777"
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                {post.numberOfComments}
+                {post.numComments}
               </Text>
             </Flex>
             {userIsCreator && (

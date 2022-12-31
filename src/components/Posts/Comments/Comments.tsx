@@ -8,14 +8,17 @@ import {
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import {
+  arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   orderBy,
   query,
   serverTimestamp,
   Timestamp,
+  updateDoc,
   where,
   writeBatch,
 } from "firebase/firestore";
@@ -24,7 +27,8 @@ import { useSetRecoilState } from "recoil";
 import { Post, postState } from "../../../atoms/postsAtom";
 import { firestore } from "../../../firebase/clientApp";
 import CommentInput from "./CommentInput";
-import CommentItem, { Comment } from "./CommentItem";
+import CommentItem, { Comment, Reply } from "./CommentItem";
+import { v4 as uuidv4 } from "uuid";
 
 type CommentsProps = {
   user: User;
@@ -52,33 +56,85 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
       const newComment: Comment = {
         id: commentDocRef.id,
         creatorId: user.uid,
-        creatorDisplayText: user.email!.split("@")[0],
+        creatorDisplayText: user.displayName ? user.displayName : "Anonymous",
         postId: selectedPost?.id!,
         postTitle: selectedPost?.title!,
         text: commentText,
         createdAt: serverTimestamp() as Timestamp,
+        replies: [],
       };
 
       batch.set(commentDocRef, newComment);
 
       newComment.createdAt = { seconds: Date.now() / 1000 } as Timestamp;
 
-      // update post numberOfComments +1
+      // update post numComments +1
       const postDocRef = doc(firestore, "posts", selectedPost?.id! as string);
       batch.update(postDocRef, {
-        numberOfComments: increment(1),
+        numComments: increment(1),
       });
 
       await batch.commit();
 
       // update client recoil state
       setCommentText("");
-      setComments((prev) => [newComment, ...prev]);
+      setComments((prev) => [...prev, newComment]);
       setPostState((prev) => ({
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
-          numberOfComments: prev.selectedPost?.numberOfComments! + 1,
+          numComments: prev.selectedPost?.numComments! + 1,
+        } as Post,
+      }));
+    } catch (error) {
+      console.log("onCreateComment error", error);
+    }
+    setCreateLoading(false);
+  };
+
+  const onCreateReply = async (replyText: string, parentId: string) => {
+    setCreateLoading(true);
+    try {
+      const batch = writeBatch(firestore);
+
+      const commentDocRef = doc(firestore, "comments", parentId);
+      const parentComment = (await getDoc(commentDocRef)).data();
+      const updatedComments = [...comments];
+
+      if (!parentComment) {
+        return;
+      }
+
+      const newReply: Reply = {
+        id: uuidv4(),
+        creatorId: user.uid,
+        creatorDisplayText: user.displayName ? user.displayName : "Anonymous",
+        parentId: parentComment.id,
+        text: replyText,
+        createdAt: { seconds: Math.round(Date.now() / 1000) } as Timestamp,
+      };
+
+      await updateDoc(commentDocRef, { replies: arrayUnion(newReply) });
+
+      newReply.createdAt = { seconds: Date.now() / 1000 } as Timestamp;
+
+      // update post numComments +1
+      const postDocRef = doc(firestore, "posts", selectedPost?.id! as string);
+      batch.update(postDocRef, {
+        numComments: increment(1),
+      });
+
+      await batch.commit();
+
+      // update client recoil state
+      const index = comments.findIndex((c) => c.id === parentId);
+      updatedComments[index].replies = [...parentComment.replies, newReply];
+      setComments(updatedComments);
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...prev.selectedPost,
+          numComments: prev.selectedPost?.numComments! + 1,
         } as Post,
       }));
     } catch (error) {
@@ -99,7 +155,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
       // update post numberOfComments -1
       const postDocRef = doc(firestore, "posts", selectedPost?.id!);
       batch.update(postDocRef, {
-        numberOfComments: increment(-1),
+        numComments: increment(-1),
       });
 
       await batch.commit();
@@ -109,7 +165,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
-          numberOfComments: prev.selectedPost?.numberOfComments! - 1,
+          numberOfComments: prev.selectedPost?.numComments! - 1,
         } as Post,
       }));
 
@@ -125,7 +181,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
       const commentsQuery = query(
         collection(firestore, "comments"),
         where("postId", "==", selectedPost?.id),
-        orderBy("createdAt", "desc")
+        orderBy("createdAt")
       );
       const commentDocs = await getDocs(commentsQuery);
       const comments = commentDocs.docs.map((doc) => ({
@@ -212,6 +268,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
                       onDeleteComment={onDeleteComment}
                       loadingDelete={loadingDeleteId === comment.id}
                       userId={user?.uid}
+                      onCreateReply={onCreateReply}
                     />
                   ))}
                 </>

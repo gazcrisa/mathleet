@@ -1,11 +1,10 @@
 import React from "react";
-import { Flex, Image, Stack } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/clientApp";
 import RightContent from "./RightContent/RightContent";
 import SearchInput from "./SearchInput";
-import PageContent from "../Layout/PageContent";
 import { useRouter } from "next/router";
 
 const Navbar: React.FC = () => {

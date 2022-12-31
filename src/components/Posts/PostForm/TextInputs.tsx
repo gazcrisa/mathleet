@@ -1,4 +1,5 @@
-import { Button, Flex, Input } from "@chakra-ui/react";
+import { Button, Flex, Input, Stack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import TextEditor from "../../TextEditor/TextEditor";
 
 type TextInputsProps = {
@@ -22,6 +23,9 @@ const TextInputs: React.FC<TextInputsProps> = ({
   handleCreatePost,
   loading,
 }) => {
+
+  const router = useRouter();
+  
   return (
     <Flex className="input-container" direction="column" gap={3} width="100%">
       <Input
@@ -50,15 +54,26 @@ const TextInputs: React.FC<TextInputsProps> = ({
         placeholder={"Text (Optional)"}
       />
       <Flex justify="flex-end">
-        <Button
-          height="34px"
-          padding="0px 30px"
-          disabled={!textInputs.title}
-          isLoading={loading}
-          onClick={handleCreatePost}
-        >
-          Post
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="outline"
+            height="34px"
+            padding="0px 25px"
+            isLoading={loading}
+            onClick={() => router.push(`/`)}
+          >
+            Cancel
+          </Button>
+          <Button
+            height="34px"
+            padding="0px 30px"
+            disabled={!textInputs.title}
+            isLoading={loading}
+            onClick={handleCreatePost}
+          >
+            Post
+          </Button>
+        </Stack>
       </Flex>
     </Flex>
   );

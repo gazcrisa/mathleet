@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { Post } from "../../atoms/postsAtom";
 
 type NewPostFormProps = {
   user: User;
@@ -47,17 +48,18 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
     // create new post obect => type Post
     setLoading(true);
     try {
-      // store the post in db
-      const postDocRef = await addDoc(collection(firestore, "posts"), {
+      // write the new post to the db
+      await addDoc(collection(firestore, "posts"), {
         creatorId: user?.uid,
         creatorDisplayName: user.email!.split("@")[0],
         title: textInputs.title.charAt(0).toUpperCase() + textInputs.title.slice(1),
         body: textInputs.body,
         numberOfComments: 0,
-        voteStatus: 0,
+        likes: [],
         createdAt: serverTimestamp() as Timestamp,
       });
-      // redirect the user back to the communityPage using the router
+
+      // redirect the user back to the home page using the router
       router.back();
     } catch (error: any) {
       console.log("handleCreatePost error", error.message);

@@ -13,7 +13,7 @@ import SinglePost from "../../components/Posts/SinglePost";
 
 const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
-  const { postStateValue, setPostStateValue, onDeletePost, onVote } =
+  const { postStateValue, setPostStateValue, onDeletePost, onLike } =
     usePosts();
   const router = useRouter();
 
@@ -40,14 +40,8 @@ const PostPage: React.FC = () => {
         <>
           <SinglePost
             post={postStateValue.selectedPost}
-            onVote={onVote}
-            onDeletePost={onDeletePost}
-            userVoteValue={
-              postStateValue.postVotes.find(
-                (item) => item.postId === postStateValue.selectedPost?.id
-              )?.voteValue
-            }
             userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
+            onDeletePost={onDeletePost}
           />
 
           <Comments

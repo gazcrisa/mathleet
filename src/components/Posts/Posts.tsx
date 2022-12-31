@@ -2,21 +2,17 @@ import { Stack } from "@chakra-ui/react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Post, PostVote } from "../../atoms/postsAtom";
+import { Post, PostLike } from "../../atoms/postsAtom";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import PostItem from "./PostItem";
 import PostLoader from "./PostLoader";
 
-const Posts: React.FC = ({ }) => {
+const Posts: React.FC = ({}) => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const {
-    postStateValue,
-    setPostStateValue,
-    onVote,
-    onDeletePost,
-  } = usePosts();
+  const { postStateValue, setPostStateValue, onLike, onDeletePost } =
+    usePosts();
 
   const getPosts = async () => {
     setLoading(true);
@@ -47,17 +43,14 @@ const Posts: React.FC = ({ }) => {
       {loading ? (
         <PostLoader />
       ) : (
-        <Stack spacing={{base: "1", md: "2"}}>
-          {postStateValue.posts.map((item: Post) => (
+        <Stack spacing={{ base: "1", md: "2" }}>
+          {postStateValue.posts.map((p: Post) => (
             <PostItem
-              key={item.id}
-              post={item}
-              userIsCreator={user?.uid === item.creatorId}
-              userVoteValue={
-                postStateValue.postVotes.find((vote: PostVote) => vote.postId === item.id)
-                  ?.voteValue
-              }
-              onVote={onVote}
+              key={p.id}
+              post={p}
+              userIsCreator={user?.uid === p.creatorId}
+              userLiked={p.likes.includes(user?.uid!)}
+              onLike={onLike}
               onDeletePost={onDeletePost}
             />
           ))}

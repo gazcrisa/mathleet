@@ -11,15 +11,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 type SinglePostProps = {
   post: Post;
   userIsCreator: boolean;
-  userVoteValue?: number;
-  onVote: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    post: Post,
-    vote: number,
-    communityId: string
-  ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
-  homePage?: boolean;
 };
 
 const SinglePost: React.FC<SinglePostProps> = ({

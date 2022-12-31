@@ -24,12 +24,10 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 type PostItemProps = {
   post: Post;
   userIsCreator: boolean;
-  userVoteValue?: number;
-  onVote: (
+  userLiked?: boolean;
+  onLike: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    post: Post,
-    vote: number,
-    communityId: string
+    post: Post
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost?: (post: Post) => void;
@@ -58,8 +56,8 @@ moment.updateLocale("en", {
 const PostItem: React.FC<PostItemProps> = ({
   post,
   userIsCreator,
-  userVoteValue,
-  onVote,
+  userLiked,
+  onLike,
   onDeletePost,
 }) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -135,11 +133,11 @@ const PostItem: React.FC<PostItemProps> = ({
                 as={BiLike}
                 mr={1}
                 fontSize={{ base: "11pt", sm: "15pt" }}
-                color={userVoteValue === 1 ? "brand.100" : "rgb(129, 131, 132)"}
-                onClick={(event) => onVote(event, post, 1, post.id)}
+                color={userLiked ? "brand.100" : "rgb(129, 131, 132)"}
+                onClick={(event) => onLike(event, post)}
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                {post.numberOfComments > 0 ? post.voteStatus : "Like"}
+                {post.likes.length > 0 ? post.likes.length : "Like"}
               </Text>
             </Flex>
             <Flex

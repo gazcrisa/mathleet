@@ -2,7 +2,7 @@ import { Stack } from "@chakra-ui/react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Post, PostLike } from "../../atoms/postsAtom";
+import { Post } from "../../atoms/postsAtom";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import PostItem from "./PostItem";
@@ -11,10 +11,11 @@ import PostLoader from "./PostLoader";
 const Posts: React.FC = ({}) => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const { postStateValue, setPostStateValue, onLike, onDeletePost } =
+  const { postStateValue, setPostStateValue, onLike, onDeletePost, onSelectPost } =
     usePosts();
 
   const getPosts = async () => {
+    console.log("CALLING GET POSTS");
     setLoading(true);
     try {
       // get posts
@@ -52,6 +53,7 @@ const Posts: React.FC = ({}) => {
               userLiked={p.likes.includes(user?.uid!)}
               onLike={onLike}
               onDeletePost={onDeletePost}
+              onSelectPost={onSelectPost}
             />
           ))}
         </Stack>

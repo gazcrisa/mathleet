@@ -6,9 +6,11 @@ import { auth } from "../../firebase/clientApp";
 import RightContent from "./RightContent/RightContent";
 import SearchInput from "./SearchInput";
 import PageContent from "../Layout/PageContent";
+import { useRouter } from "next/router";
 
 const Navbar: React.FC = () => {
   const [user] = useAuthState(auth);
+  const router = useRouter();
 
   return (
     <Flex
@@ -21,7 +23,7 @@ const Navbar: React.FC = () => {
           align="center"
           width={{ base: "40px", md: "auto" }}
           cursor="pointer"
-          onClick={() => {}}
+          onClick={() => router.push(`/`)}
         >
           <Image
             display={{ base: "none", md: "unset" }}

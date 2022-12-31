@@ -21,9 +21,22 @@ const TextEditor: React.FC<TextEditorProps> = ({
       ["link"],
       ["blockquote", "code-block"],
       [{ list: "ordered" }, { list: "bullet" }],
-      [{ indent: "-1" }, { indent: "+1" }],
     ],
   };
+
+  const formats = [
+    "bold",
+    "code",
+    "italic",
+    "link",
+    "size",
+    "strike",
+    "script",
+    "underline",
+    "blockquote",
+    "code-block",
+    "list"
+  ];
 
   return (
     <ReactQuill
@@ -32,6 +45,7 @@ const TextEditor: React.FC<TextEditorProps> = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      formats={formats}
     />
   );
 };

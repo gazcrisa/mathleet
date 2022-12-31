@@ -173,13 +173,11 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
         width="100%"
         border="none"
         color="white"
-        mt={"15px"}
         _hover={{
           borderColor: "none",
         }}
         borderTop="0.5px solid"
         borderColor="#444"
-        paddingTop="26px"
       >
         <Stack spacing={6} p={0}>
           {fetchLoading ? (
@@ -199,7 +197,7 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
                   justify="center"
                   align="center"
                   borderColor="gray.100"
-                  p={20}
+                  p={10}
                 >
                   <Text fontWeight={700} opacity={0.3} color={"gray.200"}>
                     No Comments Yet

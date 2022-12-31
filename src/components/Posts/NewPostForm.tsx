@@ -10,22 +10,18 @@ import {
   collection,
   serverTimestamp,
   Timestamp,
-  updateDoc,
 } from "firebase/firestore";
-import { firestore, storage } from "../../firebase/clientApp";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { Post } from "../../atoms/postsAtom";
+import { firestore } from "../../firebase/clientApp";
 
 type NewPostFormProps = {
   user: User;
-  communityImageURL?: string;
 };
 
 const formTabs = [
   {
     title: "Post",
     icon: IoDocumentText,
-  }
+  },
 ];
 
 export type TabItem = {
@@ -47,12 +43,15 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   const handleCreatePost = async () => {
     // create new post obect => type Post
     setLoading(true);
+    console.log("title", textInputs.title);
+    console.log("body", textInputs.body);
     try {
       // write the new post to the db
       await addDoc(collection(firestore, "posts"), {
         creatorId: user?.uid,
         creatorDisplayName: user.email!.split("@")[0],
-        title: textInputs.title.charAt(0).toUpperCase() + textInputs.title.slice(1),
+        title:
+          textInputs.title.charAt(0).toUpperCase() + textInputs.title.slice(1),
         body: textInputs.body,
         numberOfComments: 0,
         likes: [],

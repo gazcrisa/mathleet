@@ -8,6 +8,9 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.bubble.css";
 import { BiLike } from "react-icons/bi";
 import { RiChat1Fill } from "react-icons/ri";
+import Dot from "../Dot";
+import LikeButton from "../LikeButton";
+import CommentButton from "../CommentButton";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -64,54 +67,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <Text color={"#777"} fontSize={{ base: "10pt" }}>
             {moment(new Date(comment.createdAt?.seconds * 1000)).fromNow()}
           </Text>
-          <Icon
-            as={BsDot}
-            fontSize={{ base: "8pt" }}
-            color={false ? "brand.100" : "rgb(129, 131, 132)"}
-            onClick={() => {}}
-          />
-          <Flex
-            align="center"
-            p="8px 8px"
-            borderRadius={4}
-            _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-            cursor="pointer"
-          >
-            <Icon
-              as={BiLike}
-              mr={1}
-              fontSize={{ base: "8pt", sm: "10pt" }}
-              color={false ? "brand.100" : "rgb(129, 131, 132)"}
-              onClick={() => {}}
-            />
-            <Text fontSize={{ base: "10pt" }} color="#777">
-              {false ? 12 : "Like"}
-            </Text>
-          </Flex>
-          <Icon
-            as={BsDot}
-            fontSize={{ base: "8pt" }}
-            color={false ? "brand.100" : "rgb(129, 131, 132)"}
-            onClick={() => {}}
-          />
-          <Flex
-            align="center"
-            p="8px 8px"
-            borderRadius={4}
-            _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-            cursor="pointer"
-          >
-            <Icon
-              as={RiChat1Fill}
-              mr={1}
-              fontSize={{ base: "8pt", sm: "10pt" }}
-              color={false ? "brand.100" : "rgb(129, 131, 132)"}
-              onClick={() => {}}
-            />
-            <Text fontSize={{ base: "10pt" }} color="#777">
-              {false ? 12 : "Reply"}
-            </Text>
-          </Flex>
+          <Dot/>
+          <LikeButton/>
+          <Dot/>
+          <CommentButton/>
         </Stack>
       </Stack>
     </Flex>

@@ -42,13 +42,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
             onChange={setCommentText}
             placeholder={"What's your response?"}
           />
-          <Flex
-            left="1px"
-            bottom="1px"
-            justify="flex-end"
-            p="6px 8px"
-            borderRadius="0px 0px 4px 4px"
-          >
+          <Flex justify="flex-end">
             <Button
               height="26px"
               mt={4}

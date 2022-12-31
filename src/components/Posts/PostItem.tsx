@@ -14,7 +14,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
-import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
@@ -26,11 +25,11 @@ type PostItemProps = {
   userIsCreator: boolean;
   userLiked?: boolean;
   onLike: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     post: Post
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
-  onSelectPost?: (post: Post) => void;
+  onSelectPost: (post: Post) => void;
   homePage?: boolean;
 };
 
@@ -59,11 +58,10 @@ const PostItem: React.FC<PostItemProps> = ({
   userLiked,
   onLike,
   onDeletePost,
+  onSelectPost
 }) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [error, setError] = useState(false);
-
-  const router = useRouter();
 
   const handleDelete = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -94,7 +92,7 @@ const PostItem: React.FC<PostItemProps> = ({
           transition: "700ms",
         }}
         cursor="pointer"
-        onClick={() => router.push(`/posts/${post.id}`)}
+        onClick={() => onSelectPost(post)}
       >
         <Flex direction="column" width="100%">
           {error && (
@@ -128,13 +126,13 @@ const PostItem: React.FC<PostItemProps> = ({
               borderRadius={4}
               _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
               cursor="pointer"
+              onClick={(event) => onLike(event, post)}
             >
               <Icon
                 as={BiLike}
                 mr={1}
                 fontSize={{ base: "11pt", sm: "15pt" }}
                 color={userLiked ? "brand.100" : "rgb(129, 131, 132)"}
-                onClick={(event) => onLike(event, post)}
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
                 {post.likes.length > 0 ? post.likes.length : "Like"}
@@ -144,8 +142,6 @@ const PostItem: React.FC<PostItemProps> = ({
               align="center"
               p="8px 10px"
               borderRadius={4}
-              _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-              cursor="pointer"
             >
               <Icon
                 as={RiChat1Fill}
@@ -154,7 +150,7 @@ const PostItem: React.FC<PostItemProps> = ({
                 color="#777"
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                {post.numberOfComments > 0 ? post.numberOfComments : "Comment"}
+                {post.numberOfComments}
               </Text>
             </Flex>
             {userIsCreator && (

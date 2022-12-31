@@ -44,7 +44,9 @@ const CommentInput: React.FC<CommentInputProps> = ({
           />
           <Flex justify="flex-end">
             <Button
-              height="26px"
+              height={{ base: "16px", sm: "20px" }}
+              fontSize={{ base: "10pt", sm: "12pt" }}
+              padding={{ base: 3, sm: 4 }}
               mt={4}
               disabled={!commentText.length}
               isLoading={createLoading}

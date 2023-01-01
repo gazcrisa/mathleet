@@ -54,6 +54,7 @@ const PostPage: React.FC = () => {
 
           <Comments
             user={user as User}
+            postId={postStateValue.selectedPost.id}
             selectedPost={postStateValue.selectedPost}
           />
         </>

@@ -33,25 +33,6 @@ type PostItemProps = {
   homePage?: boolean;
 };
 
-moment.updateLocale("en", {
-  relativeTime: {
-    future: "in %s",
-    past: "%s",
-    s: "Just Now",
-    ss: "%ss",
-    m: "1min",
-    mm: "%dm",
-    h: "1h",
-    hh: "%dh",
-    d: "Yesterday",
-    dd: "%dd",
-    M: "1m",
-    MM: "%dM",
-    y: "1y",
-    yy: "%dY",
-  },
-});
-
 const PostItem: React.FC<PostItemProps> = ({
   post,
   userIsCreator,

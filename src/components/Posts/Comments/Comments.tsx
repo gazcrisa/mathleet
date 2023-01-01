@@ -32,10 +32,11 @@ import { v4 as uuidv4 } from "uuid";
 
 type CommentsProps = {
   user: User;
-  selectedPost: Post | null;
+  postId: string;
+  selectedPost: Post;
 };
 
-const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
+const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -197,9 +198,9 @@ const Comments: React.FC<CommentsProps> = ({ user, selectedPost }) => {
   };
 
   useEffect(() => {
-    if (!selectedPost) return;
+    console.log("called get comments");
     getPostComments();
-  }, [selectedPost]);
+  }, [postId]);
 
   return (
     <Flex direction="column" bg="#222" justifyContent={"center"} align="center">

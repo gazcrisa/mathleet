@@ -69,7 +69,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
   };
 
   useEffect(() => {
-    console.log("creating a reply?", createReplyLoading);
   }, [createReplyLoading]);
 
   return (

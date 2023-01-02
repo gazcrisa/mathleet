@@ -8,7 +8,7 @@ import TextEditor from "../../TextEditor/TextEditor";
 type CommentInputProps = {
   commentText: string;
   setCommentText: (value: string) => void;
-  user: User;
+  user?: User | null;
   createLoading: boolean;
   onCreateComment: (commentText: string) => void;
 };

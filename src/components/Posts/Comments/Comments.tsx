@@ -31,7 +31,6 @@ import CommentInput from "./CommentInput";
 import CommentItem, { Comment, Reply } from "./CommentItem";
 import { v4 as uuidv4 } from "uuid";
 import { authModalState } from "../../../atoms/authModalAtom";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 type CommentsProps = {
   user?: User | null;
@@ -65,7 +64,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
 
       const newComment: Comment = {
         id: commentDocRef.id,
-        creatorId: user?.uid,
+        creatorId: user.uid,
         creatorDisplayText: user.displayName ? user.displayName : "Anonymous",
         postId: selectedPost?.id!,
         postTitle: selectedPost?.title!,
@@ -104,6 +103,12 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
   };
 
   const onCreateReply = async (replyText: string, parentId: string) => {
+    // check for a user, if not, open auth modal
+    if (!user?.uid) {
+      setAuthModalState({ open: true, view: "login" });
+      return false;
+    }
+
     try {
       const batch = writeBatch(firestore);
 
@@ -112,7 +117,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
       const updatedComments = [...comments];
 
       if (!parentComment) {
-        return;
+        return false;
       }
 
       const newReply: Reply = {
@@ -122,7 +127,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
         parentId: parentComment.id,
         text: replyText,
         createdAt: { seconds: Math.round(Date.now() / 1000) } as Timestamp,
-        likes: []
+        likes: [],
       };
 
       await updateDoc(commentDocRef, { replies: arrayUnion(newReply) });
@@ -148,8 +153,10 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
           numComments: prev.selectedPost?.numComments! + 1,
         } as Post,
       }));
+      return true;
     } catch (error) {
       console.log("onCreateReplyError", error);
+      return false;
     }
   };
 
@@ -190,7 +197,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
     }
   };
 
-  const onDeleteComment = async (comment: any) => {
+  const onDeleteComment = async (comment: Comment) => {
     setLoadingDeleteId(comment.id);
     try {
       const batch = writeBatch(firestore);
@@ -199,10 +206,12 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
       const commentDocRef = doc(firestore, "comments", comment.id);
       batch.delete(commentDocRef);
 
+      const numReplies = comment.replies.length;
+
       // update post numberOfComments -1
-      const postDocRef = doc(firestore, "posts", selectedPost?.id!);
+      const postDocRef = doc(firestore, "posts", comment.postId);
       batch.update(postDocRef, {
-        numComments: increment(-1),
+        numComments: increment(-1 * (numReplies + 1)),
       });
 
       await batch.commit();
@@ -212,20 +221,24 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
-          numberOfComments: prev.selectedPost?.numComments! - 1,
+          numComments: prev.selectedPost?.numComments! - (1 + numReplies),
         } as Post,
       }));
 
       setComments((prev) => prev.filter((item) => item.id !== comment.id));
+
+      setLoadingDeleteId("");
+      return true;
     } catch (error) {
       console.log("onDeleteComment error", error);
+      setLoadingDeleteId("");
+      return false;
     }
-    setLoadingDeleteId("");
   };
 
   const onLikeReply = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    reply: Reply,
+    reply: Reply
   ) => {
     console.log("on like reply called");
     event.stopPropagation();
@@ -238,41 +251,113 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
       const batch = writeBatch(firestore);
       const { likes } = reply;
       const existingLike = likes.includes(user.uid);
-      const updatedReply = { ...reply };
-      // const updatedReplies = [...repl];
       const commentDocRef = doc(firestore, "comments", reply.parentId);
       const parentComment = (await getDoc(commentDocRef)).data();
-      const updatedParentComment = {...parentComment}
+      const updatedParentComment = { ...parentComment };
 
       if (!parentComment) {
         return;
       }
 
       //  get index of reply
-      const replyIndex = parentComment.replies.findIndex((r: Reply) => r.id == reply.id)
-      let updatedReplyLikes = [...parentComment.replies[replyIndex].likes]
-      
-      
+      const replyIndex = parentComment.replies.findIndex(
+        (r: Reply) => r.id == reply.id
+      );
+      let updatedReplyLikes = [...parentComment.replies[replyIndex].likes];
+
       if (!existingLike) {
-        updatedReplyLikes = [...updatedReplyLikes, user.uid]
-        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes
-        batch.set(commentDocRef, updatedParentComment)
+        updatedReplyLikes = [...updatedReplyLikes, user.uid];
+        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes;
+        batch.set(commentDocRef, updatedParentComment);
       } else {
-        updatedReplyLikes = updatedReplyLikes.filter((uid) => uid !== user.uid)
-        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes
-        batch.set(commentDocRef, updatedParentComment)
+        updatedReplyLikes = updatedReplyLikes.filter((uid) => uid !== user.uid);
+        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes;
+        batch.set(commentDocRef, updatedParentComment);
       }
 
       // update comments state
       const updatedComments = [...comments];
-      const parentCommentIndex = comments.findIndex((c) => c.id === parentComment.id);
-      updatedComments[parentCommentIndex] = updatedParentComment as Comment
+      const parentCommentIndex = comments.findIndex(
+        (c) => c.id === parentComment.id
+      );
+      updatedComments[parentCommentIndex] = updatedParentComment as Comment;
 
       setComments(updatedComments);
 
-      batch.commit()
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...prev.selectedPost,
+          comments: updatedComments
+        } as Post,
+      }));
+
+      batch.commit();
     } catch (error) {
       console.log("onLikeReply error", error);
+    }
+  };
+
+  const onDeleteReply = async (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    reply: Reply
+  ) => {
+    console.log("on delete reply called");
+    event.stopPropagation();
+    // check for a user, if not, open auth modal
+    if (!user?.uid) {
+      setAuthModalState({ open: true, view: "login" });
+      return false;
+    }
+    try {
+      const batch = writeBatch(firestore);
+      const commentDocRef = doc(firestore, "comments", reply.parentId);
+      const parentComment = (await getDoc(commentDocRef)).data();
+      const updatedParentComment = { ...parentComment };
+
+      if (!parentComment) {
+        return false;
+      }
+
+      const updatedReplies = parentComment.replies.filter(
+        (r: Reply) => r.id !== reply.id
+      );
+      updatedParentComment.replies = updatedReplies;
+
+      // update the comment now that reply was removed
+      batch.set(commentDocRef, updatedParentComment);
+
+      // update post numComments -1
+      const postDocRef = doc(firestore, "posts", selectedPost?.id! as string);
+      batch.update(postDocRef, {
+        numComments: increment(-1),
+      });
+
+      await batch.commit();
+
+      // update comments state
+      const updatedComments = [...comments];
+      const parentCommentIndex = comments.findIndex(
+        (c) => c.id === parentComment.id
+      );
+      updatedComments[parentCommentIndex] = updatedParentComment as Comment;
+
+      setComments(updatedComments);
+
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...prev.selectedPost,
+          numComments: prev.selectedPost?.numComments! -1,
+          comments: updatedComments
+        } as Post,
+      }));
+
+      batch.commit();
+      return true;
+    } catch (error) {
+      console.log("onDeleteReply error", error);
+      return false;
     }
   };
 
@@ -319,7 +404,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
           borderColor: "none",
         }}
       >
-        {user && !fetchLoading && (
+        {!fetchLoading && (
           <CommentInput
             commentText={commentText}
             setCommentText={setCommentText}
@@ -368,16 +453,17 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
                 <>
                   {comments.map((comment) => (
                     <CommentItem
-                    user={user}
+                      user={user}
                       key={comment.id}
+                      userIsCreator={user?.uid === selectedPost.creatorId}
                       comment={comment}
                       onLikeComment={onLikeComment}
                       onLikeReply={onLikeReply}
                       onDeleteComment={onDeleteComment}
-                      loadingDelete={loadingDeleteId === comment.id}
                       userId={user?.uid}
                       userLiked={comment.likes.includes(user?.uid!)}
                       onCreateReply={onCreateReply}
+                      onDeleteReply={onDeleteReply}
                     />
                   ))}
                 </>

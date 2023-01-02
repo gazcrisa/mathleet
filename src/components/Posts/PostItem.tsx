@@ -134,32 +134,6 @@ const PostItem: React.FC<PostItemProps> = ({
                 {post.numComments}
               </Text>
             </Flex>
-            {userIsCreator && (
-              <Flex
-                align="center"
-                p="8px 10px"
-                borderRadius={4}
-                _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-                cursor="pointer"
-                onClick={handleDelete}
-              >
-                {loadingDelete ? (
-                  <Spinner size="sm" />
-                ) : (
-                  <>
-                    <Icon
-                      as={AiOutlineDelete}
-                      mr={1}
-                      fontSize={{ base: "11pt", sm: "15pt" }}
-                      color="#777"
-                    />
-                    <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                      Delete
-                    </Text>
-                  </>
-                )}
-              </Flex>
-            )}
           </Stack>
           <Text color={"#777"} fontSize={{ base: "8pt", sm: "10pt" }}>
             {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}

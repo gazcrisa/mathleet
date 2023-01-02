@@ -1,7 +1,7 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { authModalState } from "../atoms/authModalAtom";
 import PageContent from "../components/Layout/PageContent";
 import NewPostForm from "../components/Posts/NewPostForm";

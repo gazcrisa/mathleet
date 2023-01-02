@@ -82,7 +82,6 @@ const SinglePost: React.FC<SinglePostProps> = ({
           <Stack direction="row">
             <Flex
               align="center"
-              p="8px 8px"
               borderRadius={4}
               _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
               cursor="pointer"
@@ -91,7 +90,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
               <Icon
                 as={BiLike}
                 mr={1}
-                fontSize={{ base: "11pt", sm: "15pt" }}
+                fontSize={{ base: "12pt", sm: "15pt" }}
                 color={userLiked ? "brand.100" : "rgb(129, 131, 132)"}
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
@@ -106,7 +105,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
               <Icon
                 as={RiChat1Fill}
                 mr={1}
-                fontSize={{ base: "11pt", sm: "15pt" }}
+                fontSize={{ base: "12pt", sm: "15pt" }}
                 color="#777"
               />
               <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
@@ -129,7 +128,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
                     <Icon
                       as={AiOutlineDelete}
                       mr={1}
-                      fontSize={{ base: "11pt", sm: "15pt" }}
+                      fontSize={{ base: "12pt", sm: "15pt" }}
                       color="#777"
                     />
                     <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">

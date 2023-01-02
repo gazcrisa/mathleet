@@ -22,9 +22,9 @@ const PostTabItem: React.FC<PostTabItemProps> = ({
       cursor="pointer"
       fontWeight={700}
       _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-      color={selected ? "gray.200" : "gray.400"}
-      borderWidth={selected ? "0px 1px 2px 0px" : "0px 1px 1px 0px"}
-      borderBottomColor={selected ? "gray.200" : "#444"}
+      color="#cccccc"
+      borderBottom="0.5px solid"
+      borderBottomColor="#444"
       borderRightColor="#444"
       onClick={() => setSelectedTab(item.title)}
     >

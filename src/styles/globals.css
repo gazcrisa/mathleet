@@ -44,7 +44,7 @@ a {
 }
 
 .ql-container.ql-bubble.ql-disabled > .ql-editor {
-  color: #cbd5e0;
+  color: #aaaaaa;
   font-size: 16px !important;
   min-height: 1em !important;
   line-height: 26px !important;

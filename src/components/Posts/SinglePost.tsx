@@ -56,10 +56,10 @@ const SinglePost: React.FC<SinglePostProps> = ({
   };
 
   return (
-    <Flex direction="column" bg="#222" justifyContent={"center"} align="center">
+    <Flex direction="column" bg="#1c1c1c" justifyContent={"center"} align="center">
       <Flex
         border="none"
-        color="white"
+        color="#cccccc"
         mt={"30px"}
         padding={"0px 10px"}
         borderRadius={"4px 4px 0px 0px"}

@@ -59,7 +59,6 @@ const TextInputs: React.FC<TextInputsProps> = ({
             variant="outline"
             height="34px"
             padding="0px 25px"
-            isLoading={loading}
             onClick={() => router.push(`/`)}
           >
             Cancel

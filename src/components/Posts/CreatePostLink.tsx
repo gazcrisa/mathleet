@@ -27,7 +27,7 @@ const CreatePostLink: React.FC<CreatePostLinkProps> = () => {
       align="center"
       height="75px"
       borderRadius={4}
-      bg="#222"
+      bg="#1c1c1c"
       p={2}
       mb={{base: "1"}}
       onClick={onClick}

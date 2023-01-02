@@ -86,7 +86,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   };
 
   return (
-    <Flex direction="column" bg="#222" borderRadius={4} mt={4}>
+    <Flex direction="column" bg="#1c1c1c" borderRadius={4} mt={{base: "0", sm: "4"}}>
       <Flex width="100%">
         {formTabs.map((item, index) => (
           <TabItem

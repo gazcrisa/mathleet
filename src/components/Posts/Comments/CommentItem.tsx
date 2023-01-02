@@ -1,24 +1,15 @@
-import {
-  Button,
-  Flex,
-  Icon,
-  Spinner,
-  Stack,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Flex, Icon, Stack, Text, Textarea } from "@chakra-ui/react";
 import { Timestamp } from "firebase/firestore";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
 import Dot from "../Dot";
-import LikeButton from "../LikeButton";
-import CommentButton from "../CommentButton";
 import ReplyItem from "./ReplyItem";
 import { RiChat1Fill } from "react-icons/ri";
-import TextEditor from "../../TextEditor/TextEditor";
+import { BiLike } from "react-icons/bi";
+import { User } from "firebase/auth";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -31,6 +22,7 @@ export type Comment = {
   text: string;
   createdAt: Timestamp;
   replies: Reply[];
+  likes: string[];
 };
 
 export type Reply = {
@@ -40,24 +32,37 @@ export type Reply = {
   parentId: string;
   text: string;
   createdAt: Timestamp;
+  likes: string[];
 };
 
 type CommentItemProps = {
+  user?: User | null;
   comment: Comment;
-  onDeleteComment: (comment: Comment) => void;
+  onLikeComment: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    comment: Comment
+  ) => void;
   onCreateReply: (replyText: string, parentId: string) => void;
+  onLikeReply: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    reply: Reply
+  ) => void;
+  onDeleteComment: (comment: Comment) => void;
+  userLiked?: boolean;
   loadingDelete: boolean;
-  createReplyLoading: boolean;
-  userId: string;
+  userId?: string | null;
 };
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
-  onDeleteComment,
+  userLiked,
+  onLikeComment,
   onCreateReply,
+  onLikeReply,
+  onDeleteComment,
   loadingDelete,
-  createReplyLoading,
   userId,
+  user,
 }) => {
   const [showEditor, setShowEditor] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -68,18 +73,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
     setReplyText("");
   };
 
-  useEffect(() => {
-  }, [createReplyLoading]);
-
   return (
     <Flex
       borderBottom={"0.5px solid"}
       borderColor={"#444"}
-      padding={"12px 0px 0px 0px"}
+      padding={"14px 0px 0px 0px"}
       direction="column"
       margin="0px !important"
     >
-      <Stack spacing={2} p={"0px 20px"} width="100%">
+      <Stack spacing={3} p={"0px 20px"} width="100%">
         <Text marginRight={1} fontSize="10pt" color="gray.300">
           Posted by {comment.creatorDisplayText}
         </Text>
@@ -89,7 +91,26 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {moment(new Date(comment.createdAt?.seconds * 1000)).fromNow()}
           </Text>
           <Dot />
-          <LikeButton />
+          <Flex
+            align="center"
+            p="8px 0px"
+            borderRadius={4}
+            _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
+            cursor="pointer"
+            onClick={(event) => {
+              onLikeComment(event, comment);
+            }}
+          >
+            <Icon
+              as={BiLike}
+              mr={1}
+              fontSize={{ base: "8pt", sm: "10pt" }}
+              color={userLiked ? "brand.100" : "rgb(129, 131, 132)"}
+            />
+            <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
+              {comment.likes.length > 0 ? comment.likes.length : "Like"}
+            </Text>
+          </Flex>
           <Dot />
           <Flex
             align="center"
@@ -113,11 +134,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </Flex>
         </Stack>
       </Stack>
-      {createReplyLoading && (
-        <Flex align="center" justifyContent="center">
-          <Spinner />
-        </Flex>
-      )}
       {showEditor && (
         <Flex direction="column" padding="10px" align="center">
           <Flex justifyContent="center" width="90%">
@@ -159,7 +175,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
               padding={{ base: 3, sm: 4 }}
               disabled={!replyText.length}
               onClick={handleReply}
-              isLoading={createReplyLoading}
             >
               Reply
             </Button>
@@ -168,8 +183,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
       )}
       <Stack spacing={0.5}>
         {comment.replies.map((reply: Reply) => (
-          <Flex bg="#111" justifyContent="flex-end" key={reply.id}>
-            <ReplyItem reply={reply} />
+          <Flex bg="#161616" justifyContent="flex-end" key={reply.id}>
+            <ReplyItem
+              reply={reply}
+              onLikeReply={onLikeReply}
+              userLiked={reply.likes.includes(user?.uid!)}
+            />
           </Flex>
         ))}
       </Stack>

@@ -26,13 +26,13 @@ const SearchInput: React.FC = () => {
           borderRadius="60px"
           _placeholder={{ color: "#666" }}
           _hover={{
-            bg: "#222",
+            bg: "#1c1c1c",
             border: "1px solid",
             borderColor: "gray.100",
           }}
           _focus={{
             outline: "none",
-            bg: "#222",
+            bg: "#1c1c1c",
             border: "1px solid",
             borderColor: "gray.100",
             color: "gray.300",

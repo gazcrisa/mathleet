@@ -62,10 +62,10 @@ const PostItem: React.FC<PostItemProps> = ({
   };
 
   return (
-    <Flex direction="column" bg="#222">
+    <Flex direction="column" bg="#1c1c1c">
       <Flex
         border="none"
-        color="white"
+        color="#cccccc"
         padding="0px 10px 20px"
         borderRadius="4px"
         _hover={{

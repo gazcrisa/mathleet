@@ -11,19 +11,36 @@ import usePosts from "../../hooks/usePosts";
 import Comments from "../../components/Posts/Comments/Comments";
 import SinglePost from "../../components/Posts/SinglePost";
 import PostLoader from "../../components/Posts/PostLoader";
+import PostNotFound from "../../components/Posts/PostNotFound";
 
 const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const { postStateValue, setPostStateValue, onDeletePost, onLike } =
-    usePosts();
+  const [postExists, setPostExists] = useState(true);
+  const [error, setError] = useState("");
+  const {
+    postStateValue,
+    setPostStateValue,
+    onDeletePost,
+    onLike,
+  } = usePosts();
   const router = useRouter();
 
   const fetchPost = async (postId: string) => {
     setLoading(true);
+
     try {
       const postDocRef = doc(firestore, "posts", postId);
+      console.log("postDocRef", postDocRef)
       const postDoc = await getDoc(postDocRef);
+
+      if (!postDoc.exists()) {
+        setPostExists(false);
+        return;
+      }
+
+      setPostExists(true);
+
       setPostStateValue((prev) => ({
         ...prev,
         selectedPost: { id: postDoc.id, ...postDoc.data() } as Post,
@@ -35,36 +52,57 @@ const PostPage: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("use effect 1 called!", postStateValue);
     const { pid } = router.query;
     if (pid && !postStateValue.selectedPost) {
       fetchPost(pid as string);
     }
   }, [router.query, postStateValue.selectedPost]);
-  return (
-    <PageContent>
-      {!loading && postStateValue.selectedPost ? (
-        <>
-          <SinglePost
-            post={postStateValue.selectedPost}
-            userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
-            onDeletePost={onDeletePost}
-            userLiked={postStateValue.selectedPost.likes.includes(user?.uid!)}
-            onLike={onLike}
-          />
 
-          <Comments
-            user={user as User}
-            postId={postStateValue.selectedPost.id}
-            selectedPost={postStateValue.selectedPost}
-          />
-        </>
+  useEffect(() => {
+    console.log("use effect 2 called!", postStateValue);
+    const { pid } = router.query;
+    if (pid) {
+      fetchPost(pid as string);
+    }
+    
+  }, [router.query, user])
+
+  return (
+    <>
+      {!postExists ? (
+        <PostNotFound />
       ) : (
-        <PostLoader />
+        <PageContent>
+          {!loading && postStateValue.selectedPost ? (
+            <>
+              <SinglePost
+                post={postStateValue.selectedPost}
+                userIsCreator={
+                  user?.uid === postStateValue.selectedPost?.creatorId
+                }
+                onDeletePost={onDeletePost}
+                userLiked={postStateValue.selectedPost.likes.includes(
+                  user?.uid!
+                )}
+                onLike={onLike}
+              />
+
+              <Comments
+                user={user as User}
+                postId={postStateValue.selectedPost?.id}
+                selectedPost={postStateValue.selectedPost}
+              />
+            </>
+          ) : (
+            <PostLoader />
+          )}
+          <>
+            <About />
+          </>
+        </PageContent>
       )}
-      <>
-        <About />
-      </>
-    </PageContent>
+    </>
   );
 };
 export default PostPage;

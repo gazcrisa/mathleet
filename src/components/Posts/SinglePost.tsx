@@ -1,5 +1,5 @@
 import { Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Post } from "../../atoms/postsAtom";
 import moment from "moment";
 import dynamic from "next/dynamic";
@@ -47,13 +47,16 @@ const SinglePost: React.FC<SinglePostProps> = ({
         throw new Error("Failed to delete post");
       }
 
-      console.log("Post was successfully deleted");
       router.push(`/`);
     } catch (error: any) {
       setError(error.message);
     }
     setLoadingDelete(false);
   };
+
+  useEffect(() => {
+    console.log("inside use effect, post was", post)
+  }, [post])
 
   return (
     <Flex direction="column" bg="#1c1c1c" justifyContent={"center"} align="center">

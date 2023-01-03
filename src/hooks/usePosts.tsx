@@ -38,11 +38,11 @@ const usePosts = () => {
       const postDocRef = doc(firestore, "posts", post.id);
 
       if (!existingLike) {
-        await updateDoc(postDocRef, {likes: arrayUnion(user.uid)})
-        updatedPost.likes = [...likes, user.uid]
+        await updateDoc(postDocRef, { likes: arrayUnion(user.uid) });
+        updatedPost.likes = [...likes, user.uid];
       } else {
-        await updateDoc(postDocRef, {likes: arrayRemove(user.uid)})
-        updatedPost.likes = likes.filter(uid => uid !== user.uid)
+        await updateDoc(postDocRef, { likes: arrayRemove(user.uid) });
+        updatedPost.likes = likes.filter((uid) => uid !== user.uid);
       }
 
       // update array of posts state
@@ -108,7 +108,7 @@ const usePosts = () => {
     setPostStateValue,
     onLike,
     onDeletePost,
-    onSelectPost
+    onSelectPost,
   };
 };
 export default usePosts;

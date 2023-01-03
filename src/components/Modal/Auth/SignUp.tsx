@@ -24,7 +24,6 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   // Firebase logic
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log(signUpForm);
     event.preventDefault();
     if (error) {
       setError("");

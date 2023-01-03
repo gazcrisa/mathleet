@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import { Post } from "../../atoms/postsAtom";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoBookmark } from "react-icons/io5";
 import { RiChat1Fill } from "react-icons/ri";
 import { BiLike } from "react-icons/bi";
-import {
-  Alert,
-  AlertIcon,
-  Flex,
-  Icon,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { Post } from "../../types";
 import moment from "moment";
 import dynamic from "next/dynamic";
 
@@ -30,37 +22,14 @@ type PostItemProps = {
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost: (post: Post) => void;
-  homePage?: boolean;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
   post,
-  userIsCreator,
   userLiked,
   onLike,
-  onDeletePost,
-  onSelectPost
+  onSelectPost,
 }) => {
-  const [loadingDelete, setLoadingDelete] = useState(false);
-  const [error, setError] = useState(false);
-
-  const handleDelete = async (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    setLoadingDelete(true);
-    try {
-      const success = await onDeletePost(post);
-
-      if (!success) {
-        throw new Error("Failed to delete post");
-      }
-    } catch (error: any) {
-      setError(error.message);
-    }
-    setLoadingDelete(false);
-  };
-
   return (
     <Flex direction="column" bg="#1c1c1c">
       <Flex
@@ -76,14 +45,13 @@ const PostItem: React.FC<PostItemProps> = ({
         onClick={() => onSelectPost(post)}
       >
         <Flex direction="column" width="100%">
-          {error && (
-            <Alert status="error">
-              <AlertIcon />
-              <Text mr={2}>{error}</Text>
-            </Alert>
-          )}
           <Stack spacing={3} p="10px">
-            <Flex align="center" justifyContent="flex-start" color="#777" paddingTop="8px">
+            <Flex
+              align="center"
+              justifyContent="flex-start"
+              color="#777"
+              paddingTop="8px"
+            >
               <Text marginRight={1} fontSize="10pt">
                 Posted by {post.creatorDisplayName}
               </Text>
@@ -93,7 +61,11 @@ const PostItem: React.FC<PostItemProps> = ({
           </Stack>
         </Flex>
       </Flex>
-      <Flex borderTop="0.5px solid" borderColor="#444" padding="0px 0px 0px 0px">
+      <Flex
+        borderTop="0.5px solid"
+        borderColor="#444"
+        padding="0px 0px 0px 0px"
+      >
         <Flex
           align="center"
           justifyContent="space-between"
@@ -119,11 +91,7 @@ const PostItem: React.FC<PostItemProps> = ({
                 {post.likes.length > 0 ? post.likes.length : "Like"}
               </Text>
             </Flex>
-            <Flex
-              align="center"
-              p="8px 10px"
-              borderRadius={4}
-            >
+            <Flex align="center" p="8px 10px" borderRadius={4}>
               <Icon
                 as={RiChat1Fill}
                 mr={1}

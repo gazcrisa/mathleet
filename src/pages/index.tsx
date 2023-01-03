@@ -41,7 +41,7 @@ export default function Home() {
         )}
         {showSuccess && <EmailVerificationResend />}
         {user && <CreatePostLink />}
-        <Posts />
+        <Posts/>
       </>
       <>
         <About />

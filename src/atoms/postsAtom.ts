@@ -1,18 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { atom } from "recoil";
 
-export type Post = {
-  id: string;
-  creatorId: string;
-  creatorDisplayName: string;
-  title: string;
-  body: string;
-  numComments: number;
-  likes: string[];
-  imageURL?: string;
-  createdAt: Timestamp;
-};
-
 interface PostState {
   selectedPost: Post | null;
   posts: Post[];

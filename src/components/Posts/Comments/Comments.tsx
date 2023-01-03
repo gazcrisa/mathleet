@@ -12,7 +12,6 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
   increment,
   orderBy,
@@ -28,9 +27,10 @@ import { useSetRecoilState } from "recoil";
 import { Post, postState } from "../../../atoms/postsAtom";
 import { firestore } from "../../../firebase/clientApp";
 import CommentInput from "./CommentInput";
-import CommentItem, { Comment, Reply } from "./CommentItem";
-import { v4 as uuidv4 } from "uuid";
+
 import { authModalState } from "../../../atoms/authModalAtom";
+import { Comment } from "../../../types";
+import CommentItem from "./CommentItem";
 
 type CommentsProps = {
   user?: User | null;
@@ -50,6 +50,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
 
   const onCreateComment = async (commentText: string) => {
     // check for a user, if not, open auth modal
+    console.log("onCreate Comment");
     if (!user?.uid) {
       setAuthModalState({ open: true, view: "login" });
       return;
@@ -70,7 +71,6 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
         postTitle: selectedPost?.title!,
         text: commentText,
         createdAt: serverTimestamp() as Timestamp,
-        replies: [],
         likes: [],
       };
 
@@ -102,69 +102,11 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
     setCreateLoading(false);
   };
 
-  const onCreateReply = async (replyText: string, parentId: string) => {
-    // check for a user, if not, open auth modal
-    if (!user?.uid) {
-      setAuthModalState({ open: true, view: "login" });
-      return false;
-    }
-
-    try {
-      const batch = writeBatch(firestore);
-
-      const commentDocRef = doc(firestore, "comments", parentId);
-      const parentComment = (await getDoc(commentDocRef)).data();
-      const updatedComments = [...comments];
-
-      if (!parentComment) {
-        return false;
-      }
-
-      const newReply: Reply = {
-        id: uuidv4(),
-        creatorId: user.uid,
-        creatorDisplayText: user.displayName ? user.displayName : "Anonymous",
-        parentId: parentComment.id,
-        text: replyText,
-        createdAt: { seconds: Math.round(Date.now() / 1000) } as Timestamp,
-        likes: [],
-      };
-
-      await updateDoc(commentDocRef, { replies: arrayUnion(newReply) });
-
-      newReply.createdAt = { seconds: Date.now() / 1000 } as Timestamp;
-
-      // update post numComments +1
-      const postDocRef = doc(firestore, "posts", selectedPost?.id! as string);
-      batch.update(postDocRef, {
-        numComments: increment(1),
-      });
-
-      await batch.commit();
-
-      // update client recoil state
-      const index = comments.findIndex((c) => c.id === parentId);
-      updatedComments[index].replies = [...parentComment.replies, newReply];
-      setComments(updatedComments);
-      setPostState((prev) => ({
-        ...prev,
-        selectedPost: {
-          ...prev.selectedPost,
-          numComments: prev.selectedPost?.numComments! + 1,
-        } as Post,
-      }));
-      return true;
-    } catch (error) {
-      console.log("onCreateReplyError", error);
-      return false;
-    }
-  };
-
   const onLikeComment = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     comment: Comment
   ) => {
-    console.log("on like comment called");
+    console.log("onLike Comment");
     event.stopPropagation();
     // check for a user, if not, open auth modal
     if (!user?.uid) {
@@ -179,25 +121,29 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
       const commentDocRef = doc(firestore, "comments", comment.id);
 
       if (!existingLike) {
-        await updateDoc(commentDocRef, { likes: arrayUnion(user.uid) });
         updatedComment.likes = [...likes, user.uid];
       } else {
-        await updateDoc(commentDocRef, { likes: arrayRemove(user.uid) });
         updatedComment.likes = likes.filter((uid) => uid !== user.uid);
       }
 
-      // update array of comments state
+      // update state before updating db because if the comment the user is liking was deleted, we will still show
+      // the comment on the screen anyways
       const index = comments.findIndex((c) => c.id === comment.id);
       updatedComments[index] = updatedComment;
       setComments(updatedComments);
 
-      console.log("new comments,", comments);
+      if (!existingLike) {
+        await updateDoc(commentDocRef, { likes: arrayUnion(user.uid) });
+      } else {
+        await updateDoc(commentDocRef, { likes: arrayRemove(user.uid) });
+      }
     } catch (error) {
       console.log("onLikeComment error", error);
     }
   };
 
   const onDeleteComment = async (comment: Comment) => {
+    console.log("onDelete Comment");
     setLoadingDeleteId(comment.id);
     try {
       const batch = writeBatch(firestore);
@@ -206,12 +152,10 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
       const commentDocRef = doc(firestore, "comments", comment.id);
       batch.delete(commentDocRef);
 
-      const numReplies = comment.replies.length;
-
       // update post numberOfComments -1
       const postDocRef = doc(firestore, "posts", comment.postId);
       batch.update(postDocRef, {
-        numComments: increment(-1 * (numReplies + 1)),
+        numComments: increment(-1),
       });
 
       await batch.commit();
@@ -221,7 +165,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
-          numComments: prev.selectedPost?.numComments! - (1 + numReplies),
+          numComments: prev.selectedPost?.numComments! - 1,
         } as Post,
       }));
 
@@ -236,132 +180,8 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
     }
   };
 
-  const onLikeReply = async (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    reply: Reply
-  ) => {
-    console.log("on like reply called");
-    event.stopPropagation();
-    // check for a user, if not, open auth modal
-    if (!user?.uid) {
-      setAuthModalState({ open: true, view: "login" });
-      return;
-    }
-    try {
-      const batch = writeBatch(firestore);
-      const { likes } = reply;
-      const existingLike = likes.includes(user.uid);
-      const commentDocRef = doc(firestore, "comments", reply.parentId);
-      const parentComment = (await getDoc(commentDocRef)).data();
-      const updatedParentComment = { ...parentComment };
-
-      if (!parentComment) {
-        return;
-      }
-
-      //  get index of reply
-      const replyIndex = parentComment.replies.findIndex(
-        (r: Reply) => r.id == reply.id
-      );
-      let updatedReplyLikes = [...parentComment.replies[replyIndex].likes];
-
-      if (!existingLike) {
-        updatedReplyLikes = [...updatedReplyLikes, user.uid];
-        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes;
-        batch.set(commentDocRef, updatedParentComment);
-      } else {
-        updatedReplyLikes = updatedReplyLikes.filter((uid) => uid !== user.uid);
-        updatedParentComment.replies[replyIndex].likes = updatedReplyLikes;
-        batch.set(commentDocRef, updatedParentComment);
-      }
-
-      // update comments state
-      const updatedComments = [...comments];
-      const parentCommentIndex = comments.findIndex(
-        (c) => c.id === parentComment.id
-      );
-      updatedComments[parentCommentIndex] = updatedParentComment as Comment;
-
-      setComments(updatedComments);
-
-      setPostState((prev) => ({
-        ...prev,
-        selectedPost: {
-          ...prev.selectedPost,
-          comments: updatedComments
-        } as Post,
-      }));
-
-      batch.commit();
-    } catch (error) {
-      console.log("onLikeReply error", error);
-    }
-  };
-
-  const onDeleteReply = async (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    reply: Reply
-  ) => {
-    console.log("on delete reply called");
-    event.stopPropagation();
-    // check for a user, if not, open auth modal
-    if (!user?.uid) {
-      setAuthModalState({ open: true, view: "login" });
-      return false;
-    }
-    try {
-      const batch = writeBatch(firestore);
-      const commentDocRef = doc(firestore, "comments", reply.parentId);
-      const parentComment = (await getDoc(commentDocRef)).data();
-      const updatedParentComment = { ...parentComment };
-
-      if (!parentComment) {
-        return false;
-      }
-
-      const updatedReplies = parentComment.replies.filter(
-        (r: Reply) => r.id !== reply.id
-      );
-      updatedParentComment.replies = updatedReplies;
-
-      // update the comment now that reply was removed
-      batch.set(commentDocRef, updatedParentComment);
-
-      // update post numComments -1
-      const postDocRef = doc(firestore, "posts", selectedPost?.id! as string);
-      batch.update(postDocRef, {
-        numComments: increment(-1),
-      });
-
-      await batch.commit();
-
-      // update comments state
-      const updatedComments = [...comments];
-      const parentCommentIndex = comments.findIndex(
-        (c) => c.id === parentComment.id
-      );
-      updatedComments[parentCommentIndex] = updatedParentComment as Comment;
-
-      setComments(updatedComments);
-
-      setPostState((prev) => ({
-        ...prev,
-        selectedPost: {
-          ...prev.selectedPost,
-          numComments: prev.selectedPost?.numComments! -1,
-          comments: updatedComments
-        } as Post,
-      }));
-
-      batch.commit();
-      return true;
-    } catch (error) {
-      console.log("onDeleteReply error", error);
-      return false;
-    }
-  };
-
   const getPostComments = async () => {
+    console.log("getComments");
     try {
       const commentsQuery = query(
         collection(firestore, "comments"),
@@ -381,9 +201,9 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
   };
 
   useEffect(() => {
-    console.log("called get comments");
+    if (!selectedPost) return;
     getPostComments();
-  }, [postId]);
+  }, [selectedPost]);
 
   return (
     <Flex
@@ -458,12 +278,9 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
                       userIsCreator={user?.uid === selectedPost.creatorId}
                       comment={comment}
                       onLikeComment={onLikeComment}
-                      onLikeReply={onLikeReply}
                       onDeleteComment={onDeleteComment}
                       userId={user?.uid}
                       userLiked={comment.likes.includes(user?.uid!)}
-                      onCreateReply={onCreateReply}
-                      onDeleteReply={onDeleteReply}
                     />
                   ))}
                 </>

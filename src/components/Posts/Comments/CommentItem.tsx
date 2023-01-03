@@ -7,44 +7,21 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { Timestamp } from "firebase/firestore";
 import moment from "moment";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
 import Dot from "../Dot";
-import ReplyItem from "./ReplyItem";
 import { RiChat1Fill } from "react-icons/ri";
 import { BiLike } from "react-icons/bi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { User } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
+import { Comment } from "../../../types";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-export type Comment = {
-  id: string;
-  creatorId: string;
-  creatorDisplayText: string;
-  postId: string;
-  postTitle: string;
-  text: string;
-  createdAt: Timestamp;
-  replies: Reply[];
-  likes: string[];
-};
-
-export type Reply = {
-  id: string;
-  creatorId: string;
-  creatorDisplayText: string;
-  parentId: string;
-  text: string;
-  createdAt: Timestamp;
-  likes: string[];
-};
 
 type CommentItemProps = {
   user?: User | null;
@@ -54,12 +31,6 @@ type CommentItemProps = {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     comment: Comment
   ) => void;
-  onCreateReply: (replyText: string, parentId: string) => Promise<boolean>;
-  onLikeReply: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    reply: Reply
-  ) => void;
-  onDeleteReply: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, reply: Reply) => Promise<boolean>;
   onDeleteComment: (comment: Comment) => Promise<boolean>;
   userLiked?: boolean;
   userId?: string | null;
@@ -69,46 +40,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   userLiked,
   onLikeComment,
-  onCreateReply,
-  onLikeReply,
   onDeleteComment,
-  onDeleteReply,
   user,
   userIsCreator,
 }) => {
   const [showEditor, setShowEditor] = useState(false);
   const [loadingCommentDelete, setLoadingCommentDelete] = useState(false);
   const [errorCommentDelete, setErrorCommentDelete] = useState("");
-  const [loadingCreateReply, setloadingCreateReply] = useState(false);
-  const [errorCreateReply, setErrorCreateReply] = useState("");
   const [replyText, setReplyText] = useState("");
 
   const setAuthModalState = useSetRecoilState(authModalState);
-
-  const handleCommentReply = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    setloadingCreateReply(true);
-
-    try {
-      const success = await onCreateReply(replyText, comment.id);
-      console.log("was successful?", success);
-
-      if (!success) {
-        throw new Error("Failed to create reply");
-      }
-
-      setShowEditor(false);
-      setReplyText("");
-
-      console.log("Reply was successfully created");
-    } catch (error: any) {
-      setErrorCreateReply(error.message);
-    }
-
-    setloadingCreateReply(false);
-  };
 
   const handleCommentDelete = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -117,13 +58,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
     setLoadingCommentDelete(true);
     try {
       const success = await onDeleteComment(comment);
-      console.log("Was delete successful?", success);
 
       if (!success) {
         throw new Error("Failed to delete post");
       }
 
-      console.log("Comment was successfully deleted");
     } catch (error: any) {
       setErrorCommentDelete(error.message);
     }
@@ -173,33 +112,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
               {comment.likes.length > 0 ? comment.likes.length : "Like"}
             </Text>
           </Flex>
-          <Dot />
-          <Flex
-            align="center"
-            p="8px 0px"
-            borderRadius={4}
-            _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-            cursor="pointer"
-            onClick={() => {
-              setShowEditor(!showEditor);
-            }}
-          >
-            <Icon
-              as={RiChat1Fill}
-              mr={1}
-              fontSize={{ base: "8pt", sm: "10pt" }}
-              color={false ? "brand.100" : "rgb(129, 131, 132)"}
-            />
-            <Text fontSize={{ base: "10pt" }} color="#777">
-              {false ? 12 : "Reply"}
-            </Text>
-          </Flex>
           {userIsCreator && (
             <>
               <Dot />
               <Flex
                 align="center"
-                p="8px 10px"
                 borderRadius={4}
                 _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
                 cursor="pointer"
@@ -212,7 +129,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     <Icon
                       as={AiOutlineDelete}
                       mr={1}
-                      fontSize={{ base: "8pt", sm: "10pt" }}
+                      fontSize={{ base: "12pt" }}
                       color="#777"
                     />
                     <Text fontSize={{ base: "10pt" }} color="#777">
@@ -276,19 +193,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </Flex>
         )}
       </>
-      <Stack spacing={0.5}>
-        {comment.replies.map((reply: Reply) => (
-          <Flex bg="#161616" justifyContent="flex-end" key={reply.id}>
-            <ReplyItem
-              reply={reply}
-              onLikeReply={onLikeReply}
-              onDeleteReply={onDeleteReply}
-              userLiked={reply.likes.includes(user?.uid!)}
-              userIsCreator={user?.uid === reply.creatorId}
-            />
-          </Flex>
-        ))}
-      </Stack>
     </Flex>
   );
 };

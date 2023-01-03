@@ -3,7 +3,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Post } from "../../atoms/postsAtom";
 import About from "../../components/About";
 import PageContent from "../../components/Layout/PageContent";
 import { auth, firestore } from "../../firebase/clientApp";
@@ -12,12 +11,12 @@ import Comments from "../../components/Posts/Comments/Comments";
 import SinglePost from "../../components/Posts/SinglePost";
 import PostLoader from "../../components/Posts/PostLoader";
 import PostNotFound from "../../components/Posts/PostNotFound";
+import { Post } from "../../types";
 
 const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const [postExists, setPostExists] = useState(true);
-  const [error, setError] = useState("");
   const {
     postStateValue,
     setPostStateValue,

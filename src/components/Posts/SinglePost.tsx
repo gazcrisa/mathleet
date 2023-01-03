@@ -1,6 +1,5 @@
 import { Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Post } from "../../atoms/postsAtom";
 import moment from "moment";
 import dynamic from "next/dynamic";
 
@@ -9,6 +8,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
 import { RiChat1Fill } from "react-icons/ri";
 import { useRouter } from "next/router";
+import { Post } from "../../types";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 

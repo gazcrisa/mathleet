@@ -1,11 +1,9 @@
 import {
-  Button,
   Flex,
   Icon,
   Spinner,
   Stack,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useState } from "react";
@@ -13,7 +11,6 @@ import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
 import Dot from "../Dot";
-import { RiChat1Fill } from "react-icons/ri";
 import { BiLike } from "react-icons/bi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { User } from "firebase/auth";
@@ -44,12 +41,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   user,
   userIsCreator,
 }) => {
-  const [showEditor, setShowEditor] = useState(false);
   const [loadingCommentDelete, setLoadingCommentDelete] = useState(false);
   const [errorCommentDelete, setErrorCommentDelete] = useState("");
-  const [replyText, setReplyText] = useState("");
-
-  const setAuthModalState = useSetRecoilState(authModalState);
 
   const handleCommentDelete = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -67,11 +60,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
       setErrorCommentDelete(error.message);
     }
     setLoadingCommentDelete(false);
-  };
-
-  const showAuthModal = () => {
-    setAuthModalState({ open: true, view: "login" });
-    setShowEditor(false);
   };
 
   return (
@@ -141,58 +129,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </>
           )}
         </Stack>
-      </Stack>
-      <>
-        {!user && showEditor && showAuthModal()}
-        {user && showEditor && (
-          <Flex direction="column" padding="10px" align="center">
-            <Flex justifyContent="center" width="90%">
-              <Textarea
-                name="reply"
-                color="#cbd5e0"
-                border="1px solid"
-                borderColor="#444"
-                value={replyText}
-                fontSize={{ base: "10pt", sm: "12pt" }}
-                onChange={(e) => {
-                  setReplyText(e.target.value);
-                }}
-                placeholder={"Reply to this comment"}
-                _hover={{ border: "1px", borderColor: "#444" }}
-              />
-            </Flex>
-            <Flex
-              alignItems="center"
-              justifyContent="flex-end"
-              width="90%"
-              mt="6px"
-            >
-              <Button
-                variant="outline"
-                height="34px"
-                fontSize={{ base: "10pt", sm: "12pt" }}
-                onClick={(e) => {
-                  setShowEditor(false);
-                  setReplyText("");
-                }}
-                mr="6px"
-              >
-                Cancel
-              </Button>
-              <Button
-                height="34px"
-                fontSize={{ base: "10pt", sm: "12pt" }}
-                padding={{ base: 3, sm: 4 }}
-                disabled={!replyText.length}
-                onClick={handleCommentReply}
-                isLoading={loadingCreateReply}
-              >
-                Reply
-              </Button>
-            </Flex>
-          </Flex>
-        )}
-      </>
+      </Stack>   
     </Flex>
   );
 };

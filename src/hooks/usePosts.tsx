@@ -11,8 +11,9 @@ import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "../atoms/authModalAtom";
-import { Post, postState } from "../atoms/postsAtom";
+import { postState } from "../atoms/postsAtom";
 import { auth, firestore, storage } from "../firebase/clientApp";
+import { Post } from "../types";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);

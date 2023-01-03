@@ -24,12 +24,12 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { Post, postState } from "../../../atoms/postsAtom";
+import { postState } from "../../../atoms/postsAtom";
 import { firestore } from "../../../firebase/clientApp";
 import CommentInput from "./CommentInput";
 
 import { authModalState } from "../../../atoms/authModalAtom";
-import { Comment } from "../../../types";
+import { Comment, Post } from "../../../types";
 import CommentItem from "./CommentItem";
 
 type CommentsProps = {

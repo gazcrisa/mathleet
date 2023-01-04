@@ -17,12 +17,8 @@ const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const [postExists, setPostExists] = useState(true);
-  const {
-    postStateValue,
-    setPostStateValue,
-    onDeletePost,
-    onLike,
-  } = usePosts();
+  const { postStateValue, setPostStateValue, onDeletePost, onLike } =
+    usePosts();
   const router = useRouter();
 
   const fetchPost = async (postId: string) => {
@@ -30,7 +26,7 @@ const PostPage: React.FC = () => {
 
     try {
       const postDocRef = doc(firestore, "posts", postId);
-      console.log("postDocRef", postDocRef)
+      console.log("postDocRef", postDocRef);
       const postDoc = await getDoc(postDocRef);
 
       if (!postDoc.exists()) {
@@ -64,8 +60,7 @@ const PostPage: React.FC = () => {
     if (pid) {
       fetchPost(pid as string);
     }
-    
-  }, [router.query, user])
+  }, [router.query, user]);
 
   return (
     <>

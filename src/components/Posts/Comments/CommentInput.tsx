@@ -22,6 +22,8 @@ const CommentInput: React.FC<CommentInputProps> = ({
 }) => {
   const setAuthModalState = useSetRecoilState(authModalState);
 
+  console.log(commentText)
+
   return (
     <Flex
       direction="column"

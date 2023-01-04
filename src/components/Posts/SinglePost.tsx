@@ -7,8 +7,11 @@ import "react-quill/dist/quill.bubble.css";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
 import { RiChat1Fill } from "react-icons/ri";
+import { MdEdit } from "react-icons/md";
 import { useRouter } from "next/router";
 import { Post } from "../../types";
+import EditPostInput from "./PostForm/EditPostInput";
+import usePosts from "../../hooks/usePosts";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -28,14 +31,16 @@ const SinglePost: React.FC<SinglePostProps> = ({
   userLiked,
   onLike,
   userIsCreator,
-  onDeletePost
+  onDeletePost,
 }) => {
-
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const { onEditPost } = usePosts();
   const router = useRouter();
 
-  const handleDelete = async (
+  const handleDeletePost = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.stopPropagation();
@@ -54,12 +59,30 @@ const SinglePost: React.FC<SinglePostProps> = ({
     setLoadingDelete(false);
   };
 
-  useEffect(() => {
-    console.log("inside use effect, post was", post)
-  }, [post])
+  const handleEditPost = async (text: string) => {
+    console.log("called edit post");
+    // create new post obect => type Post
+    setEditLoading(true);
+    try {
+      const success = await onEditPost(post, text);
+
+      if (!success) {
+        throw new Error("Failed to delete post");
+      }
+    } catch (error: any) {
+      setError(error.message);
+    }
+    setEditLoading(false);
+    setShowEditor(false);
+  };
 
   return (
-    <Flex direction="column" bg="#1c1c1c" justifyContent={"center"} align="center">
+    <Flex
+      direction="column"
+      bg="#1c1c1c"
+      justifyContent={"center"}
+      align="center"
+    >
       <Flex
         border="none"
         color="#cccccc"
@@ -69,9 +92,9 @@ const SinglePost: React.FC<SinglePostProps> = ({
         _hover={{
           borderColor: "none",
         }}
-        width={{base: "98%", sm: "90%"}}
+        width={{ base: "98%", sm: "90%" }}
       >
-        <Stack spacing={3} p="10px">
+        <Stack spacing={3} p="10px" width="100%">
           <Text fontSize="16pt">{post.title}</Text>
           <Stack spacing={0.5}>
             <Text marginRight={1} fontSize="10pt" color="gray.300">
@@ -81,7 +104,17 @@ const SinglePost: React.FC<SinglePostProps> = ({
               {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}
             </Text>
           </Stack>
-          <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
+          {!showEditor ? (
+            <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
+          ) : (
+            <EditPostInput
+              post={post}
+              onEdit={handleEditPost}
+              setShowEditor={setShowEditor}
+              loading={editLoading}
+            />
+          )}
+
           <Stack direction="row">
             <Flex
               align="center"
@@ -100,11 +133,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
                 {post.likes.length > 0 ? post.likes.length : "Like"}
               </Text>
             </Flex>
-            <Flex
-              align="center"
-              p="8px 10px"
-              borderRadius={4}
-            >
+            <Flex align="center" p="8px 10px" borderRadius={4}>
               <Icon
                 as={RiChat1Fill}
                 mr={1}
@@ -116,30 +145,62 @@ const SinglePost: React.FC<SinglePostProps> = ({
               </Text>
             </Flex>
             {userIsCreator && (
-              <Flex
-                align="center"
-                p="8px 10px"
-                borderRadius={4}
-                _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
-                cursor="pointer"
-                onClick={handleDelete}
-              >
-                {loadingDelete ? (
-                  <Spinner size="sm" />
-                ) : (
-                  <>
-                    <Icon
-                      as={AiOutlineDelete}
-                      mr={1}
-                      fontSize={{ base: "12pt", sm: "15pt" }}
-                      color="#777"
-                    />
-                    <Text fontSize={{ base: "10pt", sm: "11pt" }} color="#777">
-                      Delete
-                    </Text>
-                  </>
-                )}
-              </Flex>
+              <>
+                <Flex
+                  align="center"
+                  borderRadius={4}
+                  p="8px 10px"
+                  _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
+                  cursor="pointer"
+                  onClick={(e) => setShowEditor(!showEditor)}
+                >
+                  {loadingDelete ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <>
+                      <Icon
+                        as={MdEdit}
+                        mr={1}
+                        fontSize={{ base: "12pt", sm: "15pt" }}
+                        color="#777"
+                      />
+                      <Text
+                        fontSize={{ base: "10pt", sm: "11pt" }}
+                        color="#777"
+                      >
+                        Edit
+                      </Text>
+                    </>
+                  )}
+                </Flex>
+                <Flex
+                  align="center"
+                  p="8px 10px"
+                  borderRadius={4}
+                  _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
+                  cursor="pointer"
+                  onClick={handleDeletePost}
+                >
+                  {loadingDelete ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <>
+                      <Icon
+                        as={AiOutlineDelete}
+                        mr={1}
+                        fontSize={{ base: "12pt", sm: "15pt" }}
+                        color="#777"
+                      />
+                      <Text
+                        fontSize={{ base: "10pt", sm: "11pt" }}
+                        color="#777"
+                      >
+                        Delete
+                      </Text>
+                    </>
+                  )}
+                </Flex>
+              </>
             )}
           </Stack>
         </Stack>

@@ -95,6 +95,33 @@ const usePosts = () => {
     return false;
   };
 
+  const onEditPost = async (post: Post, text: string): Promise<boolean> => {
+    console.log("text received was:", text)
+    try {
+      const updatedPost = { ...post, body: text };
+      console.log("new post value was:", updatedPost)
+      const updatedPosts = [...postStateValue.posts];
+      const postDocRef = doc(firestore, "posts", post.id);
+
+      // write the updated post to the db
+      await updateDoc(postDocRef, { body: text });
+
+      // update array of posts state
+      const postIndex = postStateValue.posts.findIndex((p) => p.id === post.id);
+      updatedPosts[postIndex] = updatedPost;
+
+      console.log("fee", updatedPosts[postIndex])
+      
+      setPostStateValue((prev) => ({
+        ...prev,
+        selectedPost: updatedPost,
+      }));
+    } catch (error: any) {
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (!user) {
       setPostStateValue((prev) => ({
@@ -110,6 +137,7 @@ const usePosts = () => {
     onLike,
     onDeletePost,
     onSelectPost,
+    onEditPost
   };
 };
 export default usePosts;

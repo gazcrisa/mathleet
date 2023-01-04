@@ -57,7 +57,9 @@ const PostItem: React.FC<PostItemProps> = ({
               </Text>
             </Flex>
             <Text fontSize="16pt">{post.title}</Text>
-            <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
+            <Flex className="post-item-container" maxHeight={"250px"}>
+              <ReactQuill value={post.body} readOnly={true} theme={"bubble"} />
+            </Flex>
           </Stack>
         </Flex>
       </Flex>

@@ -180,6 +180,15 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
     }
   };
 
+  const handleCommentText = (val: string) => {
+    // this is the handler that's called by the editor in order to set the comment text on each keystroke
+    if (val === "<p><br></p>") {
+      setCommentText("");
+    } else {
+      setCommentText(val)
+    }
+  }
+
   const getPostComments = async () => {
     console.log("getComments");
     try {
@@ -227,7 +236,7 @@ const Comments: React.FC<CommentsProps> = ({ user, postId, selectedPost }) => {
         {!fetchLoading && (
           <CommentInput
             commentText={commentText}
-            setCommentText={setCommentText}
+            setCommentText={handleCommentText}
             user={user}
             createLoading={createLoading}
             onCreateComment={onCreateComment}

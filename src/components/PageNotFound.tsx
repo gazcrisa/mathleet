@@ -2,7 +2,12 @@ import React from "react";
 import { Flex, Button, Text } from "@chakra-ui/react";
 import Link from "next/link";
 
-const PostNotFound: React.FC = () => {
+type PageNotFoundProps = {
+  message: string;
+};
+
+const PageNotFound: React.FC<PageNotFoundProps> = ({ message }) => {
+  
   return (
     <Flex
       mt="0.5px"
@@ -17,7 +22,7 @@ const PostNotFound: React.FC = () => {
         justify="center"
         borderRadius="5px"
       >
-        <Text color="#cccccc">Sorry, that post does not exist anymore.</Text>
+        <Text color="#cccccc">{message}</Text>
         <Link href="/">
           <Button mt={4}>BACK</Button>
         </Link>
@@ -25,4 +30,4 @@ const PostNotFound: React.FC = () => {
     </Flex>
   );
 };
-export default PostNotFound;
+export default PageNotFound;

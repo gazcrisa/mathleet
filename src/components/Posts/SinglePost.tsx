@@ -80,7 +80,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
     <Flex
       direction="column"
       bg="#1c1c1c"
-      justifyContent={"center"}
+      justifyContent="center"
       align="center"
     >
       <Flex

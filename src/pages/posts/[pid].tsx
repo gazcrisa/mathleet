@@ -3,15 +3,15 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import About from "../../components/About";
 import PageContent from "../../components/Layout/PageContent";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
 import Comments from "../../components/Posts/Comments/Comments";
 import SinglePost from "../../components/Posts/SinglePost";
 import PostLoader from "../../components/Posts/PostLoader";
-import PostNotFound from "../../components/Posts/PostNotFound";
+import PageNotFound from "../../components/PageNotFound";
 import { Post } from "../../types";
+import SidePanel from "../../components/SidePanel/SidePanel";
 
 const PostPage: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -47,7 +47,6 @@ const PostPage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("use effect 1 called!", postStateValue);
     const { pid } = router.query;
     if (pid && !postStateValue.selectedPost) {
       fetchPost(pid as string);
@@ -55,7 +54,6 @@ const PostPage: React.FC = () => {
   }, [router.query, postStateValue.selectedPost]);
 
   useEffect(() => {
-    console.log("use effect 2 called!", postStateValue);
     const { pid } = router.query;
     if (pid) {
       fetchPost(pid as string);
@@ -65,7 +63,7 @@ const PostPage: React.FC = () => {
   return (
     <>
       {!postExists ? (
-        <PostNotFound />
+        <PageNotFound message="Sorry, that post does not exist anymore." />
       ) : (
         <PageContent>
           {!loading && postStateValue.selectedPost ? (
@@ -92,7 +90,7 @@ const PostPage: React.FC = () => {
             <PostLoader />
           )}
           <>
-            <About />
+            <SidePanel />
           </>
         </PageContent>
       )}

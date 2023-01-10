@@ -1,4 +1,3 @@
-import About from "../components/About";
 import PageContent from "../components/Layout/PageContent";
 import CreatePostLink from "../components/Posts/CreatePostLink";
 import Posts from "../components/Posts/Posts";
@@ -7,6 +6,7 @@ import { auth } from "../firebase/clientApp";
 import EmailVerificationAlert from "../components/Alerts/EmailVerificationAlert";
 import { useEffect, useState } from "react";
 import EmailVerificationResend from "../components/Alerts/EmailVerificationResend";
+import SidePanel from "../components/SidePanel/SidePanel";
 
 export default function Home() {
   const [user] = useAuthState(auth);
@@ -41,10 +41,10 @@ export default function Home() {
         )}
         {showSuccess && <EmailVerificationResend />}
         {user && <CreatePostLink />}
-        <Posts/>
+        <Posts />
       </>
       <>
-        <About />
+        <SidePanel />
       </>
     </PageContent>
   );

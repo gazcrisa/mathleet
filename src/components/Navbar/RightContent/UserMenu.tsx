@@ -58,7 +58,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             >
               <Flex align="center">
                 <Icon fontSize={20} mr={2} as={CgProfile} />
-                Profile
+                My Profile
               </Flex>
             </MenuItem>
             <MenuDivider />

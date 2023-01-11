@@ -1,7 +1,7 @@
 import {
   Button,
   Flex,
-  IconButton,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,7 +16,8 @@ import {
 import React, { useState } from "react";
 import { ProblemType } from "../../enums/problems";
 import Problem from "./Problem";
-import { VscDebugRestart } from "react-icons/vsc";
+import { BiMicrophone } from "react-icons/bi";
+import { BiMinusCircle } from "react-icons/bi";
 
 type PracticeContainerProps = {
   problemType: ProblemType;
@@ -26,7 +27,7 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
   problemType,
 }) => {
   const [size, setSize] = useState(10);
-  const [includeNegatives, setIncludesNegatives] = useState(false);
+  const [hasNegatives, setHasNegatives] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getTitle = (type: ProblemType) => {
@@ -102,21 +103,28 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
               </Stack>
             </Flex>
             <Stack align="center" direction="row">
+              <Icon color="brand.100" fontSize={20} mr={2} as={BiMinusCircle} />
               <Text fontSize="12pt" width="150px">
                 Include negatives?
               </Text>
               <Switch
                 size="md"
-                checked={includeNegatives}
-                onChange={(event) => setIncludesNegatives(event.target.checked)}
+                checked={hasNegatives}
+                onChange={(event) => setHasNegatives(event.target.checked)}
               />
             </Stack>
             <Stack align="center" direction="row">
+              <Icon color="brand.100" fontSize={20} mr={2} as={BiMicrophone} />
+
               <Text fontSize="12pt" width="150px">
                 Use mic to answer?
               </Text>
+
               <Switch size="md" />
             </Stack>
+            <Text pl={10} fontSize="8pt" width="300px">
+              To use mic, please use Google Chrome Browser
+            </Text>
           </Stack>
           <Button height="30px" onClick={onOpen} mt={4}>
             Start
@@ -128,22 +136,13 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
             <ModalCloseButton />
             <ModalBody>
               <Problem
-                digitLength={size}
-                includeNegatives={includeNegatives}
+                size={size}
+                hasNegatives={hasNegatives}
                 type={problemType}
               />
             </ModalBody>
 
-            <ModalFooter>
-              <Flex width="100%" justify="center" ml={6} mr={6}>
-                <IconButton
-                  variant="outline"
-                  aria-label="Call Sage"
-                  fontSize="18px"
-                  icon={<VscDebugRestart />}
-                ></IconButton>
-              </Flex>
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>
       </Flex>

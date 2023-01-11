@@ -99,7 +99,6 @@ const usePosts = () => {
     console.log("text received was:", text)
     try {
       const updatedPost = { ...post, body: text };
-      console.log("new post value was:", updatedPost)
       const updatedPosts = [...postStateValue.posts];
       const postDocRef = doc(firestore, "posts", post.id);
 
@@ -109,8 +108,6 @@ const usePosts = () => {
       // update array of posts state
       const postIndex = postStateValue.posts.findIndex((p) => p.id === post.id);
       updatedPosts[postIndex] = updatedPost;
-
-      console.log("fee", updatedPosts[postIndex])
       
       setPostStateValue((prev) => ({
         ...prev,

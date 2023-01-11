@@ -88,7 +88,6 @@ const percentage = (size: number): Problem[] => {
       const percentage = pickNumber(percentages) / 100;
       if ((x * percentage) % 1 == 0) {
         foundValid = true;
-        console.log("the percentage: ", percentage)
         y = percentage * 100;
         break;
       }
@@ -119,11 +118,30 @@ const generateNumbersInRange = (min: number, max: number) => {
   return numbers;
 };
 
+const mashup = (size: number, hasNegatives: boolean) => {
+  let problems: Problem[] = [];
+  problems = problems.concat(
+    addSubtract(size, hasNegatives),
+    multiplyDivide(size, hasNegatives),
+    percentage(size)
+  );
+  return shuffle(problems).slice(0, 200);
+};
+
+const shuffle = (array: Problem[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 export const generateProblems = (
   size: number,
   hasNegatives: boolean,
   type: ProblemType
 ): Problem[] => {
+  console.log("the type was", type);
   switch (type) {
     case ProblemType.ADD_SUBTRACT:
       return addSubtract(size, hasNegatives);
@@ -132,6 +150,7 @@ export const generateProblems = (
     case ProblemType.PERCENTAGES:
       return percentage(size);
     default:
-      return [];
+      console.log("in here!!");
+      return mashup(size, hasNegatives);
   }
 };

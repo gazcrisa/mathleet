@@ -35,6 +35,14 @@ const Timer: React.FC<TimerProps> = ({ isRunning, handleDone }) => {
     return () => clearInterval(interval);
   }, [seconds, minutes, isRunning]);
 
+  useEffect(() => {
+    if (!isRunning) {
+      // reset clock
+      setMinutes(2);
+      setSeconds(0);
+    }
+  }, [isRunning]);
+
   return (
     <Text ml="1" fontSize="18px" color="#777" padding="3px 6px">
       {generateTimeString()}

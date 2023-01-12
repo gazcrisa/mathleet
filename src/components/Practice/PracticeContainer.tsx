@@ -1,7 +1,6 @@
 import {
   Button,
   Flex,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,8 +15,7 @@ import {
 import React, { useState } from "react";
 import { ProblemType } from "../../enums/problems";
 import Problem from "./Problem";
-import { BiMicrophone } from "react-icons/bi";
-import { BiMinusCircle } from "react-icons/bi";
+import { getFullTitle } from "../../util";
 
 type PracticeContainerProps = {
   problemType: ProblemType;
@@ -28,22 +26,8 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
 }) => {
   const [size, setSize] = useState(10);
   const [hasNegatives, setHasNegatives] = useState(false);
+  const [mic, setMic] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const getTitle = (type: ProblemType) => {
-    switch (type) {
-      case ProblemType.PROBABILITY:
-        return "Probability";
-      case ProblemType.ADD_SUBTRACT:
-        return "Addition & Subtraction";
-      case ProblemType.PERCENTAGES:
-        return "Percentages";
-      case ProblemType.MULTIPLY_DIVIDE:
-        return "Multiplication & Division";
-      default:
-        return "Mashup";
-    }
-  };
 
   return (
     <Flex direction="column" bg="#1c1c1c">
@@ -59,10 +43,10 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
       >
         <Flex direction="column" width="100%" paddingTop="16px">
           <Stack spacing={6} p="10px">
-            <Text fontSize="16pt">Practice {getTitle(problemType)}</Text>
-            <Text fontSize="12pt" color="#aaaaaa">
-              Configure how the problems will be generated to adjust the
-              difficulty level
+            <Text fontSize="16pt">Practice {getFullTitle(problemType)}</Text>
+            <Text fontSize="11pt" color="#aaaaaa">
+              Please note that if you wish to use your microphone to answer, you
+              must be using Google Chrome
             </Text>
             <Flex align="center">
               <Stack spacing={6} direction={{ base: "column", md: "row" }}>
@@ -103,28 +87,13 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
               </Stack>
             </Flex>
             <Stack align="center" direction="row">
-              <Icon color="brand.100" fontSize={20} mr={2} as={BiMinusCircle} />
-              <Text fontSize="12pt" width="150px">
-                Include negatives?
-              </Text>
+              <Text fontSize="12pt">Include negatives?</Text>
               <Switch
                 size="md"
                 checked={hasNegatives}
                 onChange={(event) => setHasNegatives(event.target.checked)}
               />
             </Stack>
-            <Stack align="center" direction="row">
-              <Icon color="brand.100" fontSize={20} mr={2} as={BiMicrophone} />
-
-              <Text fontSize="12pt" width="150px">
-                Use mic to answer?
-              </Text>
-
-              <Switch size="md" />
-            </Stack>
-            <Text pl={10} fontSize="8pt" width="300px">
-              To use mic, please use Google Chrome Browser
-            </Text>
           </Stack>
           <Button height="30px" onClick={onOpen} mt={4}>
             Start

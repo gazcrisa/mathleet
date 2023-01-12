@@ -22,7 +22,7 @@ const SearchInput: React.FC = () => {
         <Input
           color="white"
           placeholder="Search Posts"
-          fontSize={{ base: "10pt", sm: "12pt" }}
+          fontSize={{ base: "11pt", sm: "12pt" }}
           borderRadius="60px"
           _placeholder={{ color: "#666" }}
           _hover={{

@@ -1,5 +1,3 @@
-import { user } from "firebase-functions/v1/auth";
-import { User } from "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import PageContent from "../../components/Layout/PageContent";
@@ -15,13 +13,11 @@ const ProblemPage: React.FC = () => {
   const router = useRouter();
 
   const validSkills = [
-    ProblemType.PROBABILITY,
     ProblemType.ADD_SUBTRACT,
     ProblemType.MULTIPLY_DIVIDE,
     ProblemType.PERCENTAGES,
-    ProblemType.MASHUP
+    ProblemType.MASHUP,
   ];
-
 
   const checkValidSkill = (problemType: ProblemType) => {
     const isValid = validSkills.includes(problemType);

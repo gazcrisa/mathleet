@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { TbMath } from "react-icons/tb";
 import { ProblemType } from "../../enums/problems";
+import { getShortTitle } from "../../util";
 
 type PracticeProps = {};
 
@@ -16,6 +17,8 @@ const Practice: React.FC<PracticeProps> = () => {
     event.stopPropagation();
     router.push(`/practice/${problemType}`);
   };
+
+  const problemTypes = Object.values(ProblemType);
 
   return (
     <Flex
@@ -46,42 +49,20 @@ const Practice: React.FC<PracticeProps> = () => {
           <Text fontSize="9pt" color="#cccccc">
             Boost your mental math skills with daily practice.
           </Text>
-          <Button
-            variant="outline"
-            height="30px"
-            onClick={(e) => {
-              handleSelection(e, ProblemType.PERCENTAGES);
-            }}
-          >
-            Percentages
-          </Button>
-          <Button
-            variant="outline"
-            height="30px"
-            onClick={(e) => {
-              handleSelection(e, ProblemType.ADD_SUBTRACT);
-            }}
-          >
-            Add / Subtract
-          </Button>
-          <Button
-            variant="outline"
-            height="30px"
-            onClick={(e) => {
-              handleSelection(e, ProblemType.MULTIPLY_DIVIDE);
-            }}
-          >
-            Multiply / Divide
-          </Button>
-          <Button
-            variant="outline"
-            height="30px"
-            onClick={(e) => {
-              handleSelection(e, ProblemType.MASHUP);
-            }}
-          >
-            Mash Up
-          </Button>
+          {problemTypes.map((type) => {
+            return (
+              <Button
+                key={type}
+                variant="outline"
+                height="30px"
+                onClick={(e) => {
+                  handleSelection(e, type);
+                }}
+              >
+                {getShortTitle(type)}
+              </Button>
+            );
+          })}
         </Stack>
       </Flex>
     </Flex>

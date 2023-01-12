@@ -9,6 +9,12 @@ const addSubtract = (size: number, hasNegatives: boolean): Problem[] => {
     let x = pickNumber(numbers);
     let y = pickNumber(numbers);
 
+    if (!hasNegatives) {
+      while (x < y) {
+        x = pickNumber(numbers)
+      }
+    }
+
     let answer = 0;
     let operation;
 
@@ -23,6 +29,11 @@ const addSubtract = (size: number, hasNegatives: boolean): Problem[] => {
     if (hasNegatives) {
       if (Math.random() < 0.5) {
         x = x * -1;
+        if (operation == "-") {
+          answer = x - y
+        } else {
+          answer = x + y
+        }
       }
     }
 
@@ -50,6 +61,13 @@ const multiplyDivide = (size: number, hasNegatives: boolean): Problem[] => {
     result = x * y;
 
     if (Math.random() < 0.5) {
+
+      if (size == 100) {
+        while (x * y >= 999) {
+          x = pickNumber(numbers)
+        }
+      }
+
       const dividend = x * y;
       result = dividend / y;
       problem = `${dividend} ÷ ${y}`;

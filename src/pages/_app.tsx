@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
 import { theme } from "../../chakra/theme";
 import Layout from "../components/Layout/Layout";
+import "regenerator-runtime/runtime";
 import "../firebase/clientApp";
 import "../styles/globals.css";
 

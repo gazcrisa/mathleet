@@ -1,4 +1,4 @@
-import { Button, Flex, IconButton, Input, Stack, Text } from "@chakra-ui/react";
+import { Badge, Button, Flex, IconButton, Input, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CountDown from "./CountDown";
 import { Problem } from "../../types/problem";
@@ -20,6 +20,32 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [showCountDown, setShowCountDown] = useState(true);
+
+  const getLevelText = (size: number): string => {
+    switch (size) {
+      case 10:
+        return "Easy";
+      case 100:
+        return "Medium";
+      case 1000:
+        return "Hard";
+      default:
+        return "Undefined";
+    }
+  };
+
+  const getLevelColor = (size: number): string => {
+    switch (size) {
+      case 10:
+        return "#90EE90";
+      case 100:
+        return "#FFFF00";
+      case 1000:
+        return "#FF4500";
+      default:
+        return "#777";
+    }
+  };
 
   const handleShowProblems = () => {
     setShowCountDown(false);
@@ -53,6 +79,7 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
   }, []);
 
   const handleRestart = () => {
+    setProblems(generateProblems(size, hasNegatives, type));
     setShowProblem(false);
     setShowCountDown(true);
     setIsFinished(false);
@@ -116,9 +143,12 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
         width="100%"
         color="#777"
         padding={6}
-        justifyContent="flex-end"
+        justifyContent="space-between"
         align="center"
       >
+        <Badge variant="subtle" color={getLevelColor(size)} bg="#444">
+          Level {getLevelText(size)}
+        </Badge>
         <IconButton
           disabled={showCountDown}
           size="sm"

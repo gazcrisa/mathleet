@@ -1,7 +1,6 @@
 export enum ProblemType {
-    PROBABILITY = 'probability',
-    ADD_SUBTRACT = 'add-subtract',
     PERCENTAGES = 'percentages',
+    ADD_SUBTRACT = 'add-subtract',
     MULTIPLY_DIVIDE = 'multiply-divide',
     MASHUP = 'mashup'
 }

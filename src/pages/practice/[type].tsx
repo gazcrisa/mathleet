@@ -1,15 +1,18 @@
+import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PageContent from "../../components/Layout/PageContent";
 import PageNotFound from "../../components/PageNotFound";
 import PracticeContainer from "../../components/Practice/PracticeContainer";
 import SidePanel from "../../components/SidePanel/SidePanel";
+import TopSlider from "../../components/TopSlider/TopSlider";
 import { ProblemType } from "../../enums/problems";
 
 const ProblemPage: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const [problemType, setProblemType] = useState<ProblemType>();
   const [problemTypeValid, setProblemTypeValid] = useState(false);
+  const [width, setWidth] = useState(0);
+  const carousel = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const validSkills = [
@@ -35,6 +38,13 @@ const ProblemPage: React.FC = () => {
     }
   }, [router.query]);
 
+  useEffect(() => {
+    const ref = carousel.current;
+    if (ref) {
+      setWidth(ref.scrollWidth - ref.offsetWidth);
+    }
+  }, [carousel, checkValidSkill]);
+
   return (
     <>
       {!problemTypeValid ? (
@@ -42,6 +52,16 @@ const ProblemPage: React.FC = () => {
       ) : (
         <PageContent>
           <>
+            <Flex
+              ref={carousel}
+              p={2}
+              cursor="grab"
+              overflow="hidden"
+              display={{ md: "none" }}
+              mb={1}
+            >
+              <TopSlider width={width} />
+            </Flex>
             <PracticeContainer problemType={problemType!} />
           </>
           <>

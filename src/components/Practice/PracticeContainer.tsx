@@ -45,8 +45,7 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
           <Stack spacing={6} p="10px">
             <Text fontSize="16pt">Practice {getFullTitle(problemType)}</Text>
             <Text fontSize="11pt" color="#aaaaaa">
-              Please note that if you wish to use your microphone to answer, you
-              must be using Google Chrome
+              Pick your practice level
             </Text>
             <Flex align="center">
               <Stack spacing={6} direction={{ base: "column", md: "row" }}>

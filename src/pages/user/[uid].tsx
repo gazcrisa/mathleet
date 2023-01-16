@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PageContent from "../../components/Layout/PageContent";
-import ReversePageContent from "../../components/Layout/ReversePageContent";
 import PageNotFound from "../../components/PageNotFound";
 import PostLoader from "../../components/Posts/PostLoader";
 import ProfilePanel from "../../components/Profile/ProfilePanel";

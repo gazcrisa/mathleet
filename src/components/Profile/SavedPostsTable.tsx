@@ -51,6 +51,7 @@ const SavedPostsTable: React.FC<SavedPostsTableProps> = ({ uid }) => {
                         whiteSpace="normal"
                         textAlign="left"
                         fontSize="14px"
+                        borderRadius={0}
                         p={0}
                         variant="unstyled"
                         onClick={(e) => {

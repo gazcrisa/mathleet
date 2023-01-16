@@ -18,30 +18,20 @@ const Navbar: React.FC = () => {
       // justifyContent={{ md: "space-between" }}
       justify="center"
     >
-      <Flex width={{base: "100%", md: "80%"}} align="center" justify="space-between">
       <Flex
+        width={{ base: "100%", md: "80%" }}
         align="center"
-        cursor="pointer"
-        onClick={() => router.push(`/`)}
+        justify="space-between"
       >
-        <Image
-        width={{base: "120px", md: "140px"}}
-        // display={{ sm: "flex" }}
-          // display={{ base: "none", md: "unset" }}
-          mr={{md: 2}}
-          src="/images/Logo_mathleet_blue_white.png"
-          // height="22px"
-        />
+        <Flex align="center" cursor="pointer" onClick={() => router.push(`/`)}>
+          <Image
+            width={{ base: "120px", md: "140px" }}
+            mr={{ md: 2 }}
+            src="/images/Logo_mathleet_blue_white.png"
+          />
+        </Flex>
 
-        {/* <Image
-          display={{ sm: "flex", md: "none" }}
-          src="/images/Logo_mathleet_blue_favicon.png"
-          height="24px"
-        /> */}
-      </Flex>
-      {/* <SearchInput /> */}
-
-      <RightContent user={user} />
+        <RightContent user={user} />
       </Flex>
     </Flex>
   );

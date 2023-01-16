@@ -1,5 +1,5 @@
-import { Stack } from "@chakra-ui/react";
-import { collection, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../../firebase/clientApp";
@@ -53,6 +53,8 @@ const Posts: React.FC = () => {
       {loading ? (
         <PostLoader />
       ) : (
+        <>
+        <Box bg="#1c1c1c"><Text ml={3} mt={2} fontSize={{base: "18px", md: "20px"}} color="#aaaaaa">Recent Discussions</Text></Box>
         <Stack spacing={{ base: "1", md: "2" }}>
           {postStateValue.posts.map((p: Post) => (
             <PostItem
@@ -67,6 +69,7 @@ const Posts: React.FC = () => {
             />
           ))}
         </Stack>
+        </>
       )}
     </>
   );

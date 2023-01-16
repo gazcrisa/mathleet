@@ -1,5 +1,5 @@
-import { Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Button, Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
 import moment from "moment";
 import dynamic from "next/dynamic";
 
@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { Post } from "../../types";
 import EditPostInput from "./PostForm/EditPostInput";
 import usePosts from "../../hooks/usePosts";
+import { ANONYMOUS } from "../../constants";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -60,14 +61,12 @@ const SinglePost: React.FC<SinglePostProps> = ({
   };
 
   const handleEditPost = async (text: string) => {
-    console.log("called edit post");
-    // create new post obect => type Post
     setEditLoading(true);
     try {
       const success = await onEditPost(post, text);
 
       if (!success) {
-        throw new Error("Failed to delete post");
+        throw new Error("Failed to edit post");
       }
     } catch (error: any) {
       setError(error.message);
@@ -97,9 +96,23 @@ const SinglePost: React.FC<SinglePostProps> = ({
         <Stack spacing={3} p="10px" width="100%">
           <Text fontSize="16pt">{post.title}</Text>
           <Stack spacing={0.5}>
-            <Text marginRight={1} fontSize="10pt" color="gray.300">
-              Posted by {post.creatorDisplayName}
-            </Text>
+            <Flex>
+              <Text color="#aaaaaa" fontSize="10pt">Posted by</Text>
+              <Button
+                ml={1}
+                fontSize="10pt"
+                fontWeight={500}
+                variant="link"
+                color="brand.100"
+                cursor="pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/user/${post.creatorId}`);
+                }}
+              >
+                {post.creatorDisplayName ? post.creatorDisplayName : ANONYMOUS}
+              </Button>
+            </Flex>
             <Text color={"#777"} fontSize={{ base: "8pt", sm: "10pt" }}>
               {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}
             </Text>

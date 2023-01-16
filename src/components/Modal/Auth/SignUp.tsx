@@ -2,13 +2,23 @@ import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase/clientApp";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import { auth, firestore } from "../../../firebase/clientApp";
 import { FIREBASE_ERRORS } from "../../../firebase/errors";
+import { User } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 
-type SignUpProps = {};
-
-const SignUp: React.FC<SignUpProps> = () => {
+const SignUp: React.FC = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
 
   const [signUpForm, setSignUpForm] = useState({
@@ -19,11 +29,19 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   const [error, setError] = useState("");
 
-  const [createUserWithEmailAndPassword, user, loading, userError] =
+  const [createUserWithEmailAndPassword, userCred, loading, userError] =
     useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
 
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+
+  const customConfig: Config = {
+    dictionaries: [adjectives, colors, animals],
+    separator: "_",
+    length: 2,
+  };
+
   // Firebase logic
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (error) {
       setError("");
@@ -31,7 +49,17 @@ const SignUp: React.FC<SignUpProps> = () => {
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match");
     }
-    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password).then(
+      (authenticate) => {
+        const user = authenticate?.user;
+        const displayName = uniqueNamesGenerator(customConfig);
+        updateProfile({ displayName }).then(() => {
+          if (user) {
+            createUserDocument(user);
+          }
+        });
+      }
+    );
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +68,27 @@ const SignUp: React.FC<SignUpProps> = () => {
       ...prev,
       [event.target.name]: event.target.value,
     }));
+  };
+
+  const createUserDocument = async (user: User) => {
+    const userDocRef = doc(firestore, "users", user.uid);
+
+    const data = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      school: "",
+      company: "",
+      rank: 0,
+      posts: [],
+      likes: [],
+      comments: [],
+      savedPosts: [],
+      highestScores: [],
+      imageURL: "",
+    };
+
+    await setDoc(userDocRef, data);
   };
 
   return (

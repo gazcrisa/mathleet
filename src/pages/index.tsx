@@ -7,8 +7,10 @@ import EmailVerificationAlert from "../components/Alerts/EmailVerificationAlert"
 import { useEffect, useRef, useState } from "react";
 import EmailVerificationResend from "../components/Alerts/EmailVerificationResend";
 import SidePanel from "../components/SidePanel/SidePanel";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import TopSlider from "../components/TopSlider/TopSlider";
+import useUser from "../hooks/useUser";
+import usePosts from "../hooks/usePosts";
 
 export default function Home() {
   const [user] = useAuthState(auth);
@@ -16,6 +18,8 @@ export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [width, setWidth] = useState(0);
   const carousel = useRef<HTMLDivElement>(null);
+  const {userStateValue, setUserStateValue, getSavedPosts} = useUser();
+  const {postStateValue, setPostStateValue} = usePosts();
 
   useEffect(() => {
     if (!user) {
@@ -23,8 +27,10 @@ export default function Home() {
       setShowEmailWarning(false);
       setShowSuccess(false);
       return;
+    } else {
+      setShowEmailWarning(!user.emailVerified);
     }
-    setShowEmailWarning(!user.emailVerified);
+    
   }, [user]);
 
   useEffect(() => {
@@ -41,6 +47,20 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (!user?.uid || !postStateValue.posts.length) return;
+    getSavedPosts(user.uid);
+
+    // Clear savedPosts on dismount
+    return () => {
+      setUserStateValue((prev) => ({
+        ...prev,
+        savedPosts: [],
+      }));
+
+    };
+  }, [postStateValue.posts, user?.uid]);
+
   return (
     <PageContent>
       <>
@@ -53,12 +73,14 @@ export default function Home() {
         <Flex
           ref={carousel}
           width="100%"
-          p={2}
+          // p={2}
           cursor="grab"
           overflow="hidden"
           display={{ md: "none" }}
           mb={1}
+          pb={2}
         >
+          <Text pl={5} pb={2} fontSize="14px"color="#aaaaaa">Practice your mental math skills</Text>
           <TopSlider width={width}/>
         </Flex>
         {showSuccess && <EmailVerificationResend />}

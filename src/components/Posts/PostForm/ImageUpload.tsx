@@ -4,14 +4,12 @@ import React, { useRef } from "react";
 type ImageUploadProps = {
   selectedFile?: string;
   onSelectImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setSelectedTab: (value: string) => void;
   setSelectedFile: (value: string) => void;
 };
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   selectedFile,
   onSelectImage,
-  setSelectedTab,
   setSelectedFile,
 }) => {
   const selectedFileRef = useRef<HTMLInputElement>(null);
@@ -26,9 +24,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             alt="No Image Available"
           />
           <Stack direction="row" mt={4}>
-            <Button height="28px" onClick={() => setSelectedTab("Post")}>
-              Back to Post
-            </Button>
             <Button height="28px" onClick={() => setSelectedFile("")}>
               Remove
             </Button>

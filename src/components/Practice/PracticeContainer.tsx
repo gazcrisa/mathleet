@@ -26,7 +26,6 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
 }) => {
   const [size, setSize] = useState(10);
   const [hasNegatives, setHasNegatives] = useState(false);
-  const [mic, setMic] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -109,8 +108,7 @@ const PracticeContainer: React.FC<PracticeContainerProps> = ({
                 type={problemType}
               />
             </ModalBody>
-
-            <ModalFooter></ModalFooter>
+            <ModalFooter />
           </ModalContent>
         </Modal>
       </Flex>

@@ -1,10 +1,14 @@
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
-import { auth } from "../../../firebase/clientApp";
+import { userState } from "../../../atoms/userAtom";
+import { auth, firestore } from "../../../firebase/clientApp";
 import { FIREBASE_ERRORS } from "../../../firebase/errors";
+import useUser from "../../../hooks/useUser";
+import { User } from "../../../types/user";
 
 type LoginProps = {};
 
@@ -20,10 +24,13 @@ const Login: React.FC<LoginProps> = () => {
     useSignInWithEmailAndPassword(auth);
 
   // Firebase logic
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    signInWithEmailAndPassword(loginForm.email, loginForm.password);
+    const authCred = await signInWithEmailAndPassword(
+      loginForm.email,
+      loginForm.password
+    );
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

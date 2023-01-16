@@ -1,10 +1,4 @@
-import {
-  Flex,
-  Icon,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
@@ -17,6 +11,8 @@ import { User } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
 import { Comment } from "../../../types";
+import { useRouter } from "next/router";
+import { ANONYMOUS } from "../../../constants";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -43,6 +39,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
 }) => {
   const [loadingCommentDelete, setLoadingCommentDelete] = useState(false);
   const [errorCommentDelete, setErrorCommentDelete] = useState("");
+  const router = useRouter();
 
   const handleCommentDelete = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -55,7 +52,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
       if (!success) {
         throw new Error("Failed to delete post");
       }
-
     } catch (error: any) {
       setErrorCommentDelete(error.message);
     }
@@ -71,9 +67,24 @@ const CommentItem: React.FC<CommentItemProps> = ({
       margin="0px !important"
     >
       <Stack spacing={3} p={"0px 20px"} width="100%">
-        <Text marginRight={1} fontSize="10pt" color="gray.300">
-          Posted by {comment.creatorDisplayText}
-        </Text>
+        <Flex>
+          <Button
+            marginRight={1}
+            fontSize="10pt"
+            fontWeight={500}
+            variant="link"
+            color="brand.100"
+            cursor="pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/user/${comment.creatorId}`);
+            }}
+          >
+            {comment.creatorDisplayText
+              ? comment.creatorDisplayText
+              : ANONYMOUS}
+          </Button>
+        </Flex>
         <ReactQuill value={comment.text} readOnly={true} theme={"bubble"} />
         <Stack direction="row" spacing={2} align="center">
           <Text color={"#777"} fontSize={{ base: "10pt" }}>
@@ -129,7 +140,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </>
           )}
         </Stack>
-      </Stack>   
+      </Stack>
     </Flex>
   );
 };

@@ -1,8 +1,10 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { use } from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
+import { ANONYMOUS } from "../../../constants";
 import TextEditor from "../../TextEditor/TextEditor";
 
 type CommentInputProps = {
@@ -21,8 +23,9 @@ const CommentInput: React.FC<CommentInputProps> = ({
   onCreateComment,
 }) => {
   const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
 
-  console.log(commentText)
+  console.log(commentText);
 
   return (
     <Flex
@@ -35,9 +38,20 @@ const CommentInput: React.FC<CommentInputProps> = ({
         <>
           <Text mb={1} color="rgb(129, 131, 132)" fontSize="10pt">
             Commenting as
-            <span style={{ color: "#3182CE", marginLeft: "5px" }}>
-              {user?.email?.split("@")[0]}
-            </span>
+            <Button
+              ml={1}
+              fontSize="10pt"
+              fontWeight={500}
+              variant="link"
+              color="brand.100"
+              cursor="pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/user/${user.uid}`);
+              }}
+            >
+              {user.displayName ? user.displayName : ANONYMOUS}
+            </Button>
           </Text>
           <TextEditor
             value={commentText}

@@ -25,3 +25,13 @@ export const getShortTitle = (type: ProblemType) => {
       return "Mashup";
   }
 };
+
+export const hashCode = (str: string): number => {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i);
+    hash = (hash << 5) - hash + code;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+};

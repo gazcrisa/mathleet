@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import PageContent from "../../components/Layout/PageContent";
@@ -54,12 +54,12 @@ const ProblemPage: React.FC = () => {
           <>
             <Flex
               ref={carousel}
-              p={2}
               cursor="grab"
               overflow="hidden"
               display={{ md: "none" }}
               mb={1}
             >
+              <Text pl={5} pb={2} fontSize="14px"color="#aaaaaa">Practice your mental math skills</Text>
               <TopSlider width={width} />
             </Flex>
             <PracticeContainer problemType={problemType!} />

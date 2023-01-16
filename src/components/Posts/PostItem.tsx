@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
+import React from "react";
 import { IoBookmark } from "react-icons/io5";
 import { RiChat1Fill } from "react-icons/ri";
 import { BiLike } from "react-icons/bi";
@@ -9,6 +8,9 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.bubble.css";
+import { useRecoilState } from "recoil";
+import { userState } from "../../atoms/userAtom";
+import { SavedPost } from "../../types/user";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -16,12 +18,17 @@ type PostItemProps = {
   post: Post;
   userIsCreator: boolean;
   userLiked?: boolean;
+  userSaved?: boolean;
   onLike: (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     post: Post
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost: (post: Post) => void;
+  onSavePost: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    post: Post
+  ) => void;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -29,7 +36,13 @@ const PostItem: React.FC<PostItemProps> = ({
   userLiked,
   onLike,
   onSelectPost,
+  onSavePost,
 }) => {
+
+  const [userStateValue, setUserStateValue] = useRecoilState(userState);
+
+  const isSaved = (userStateValue.savedPosts?.filter((p: SavedPost) => p.id === post.id))?.length
+  
   return (
     <Flex direction="column" bg="#1c1c1c">
       <Flex
@@ -116,12 +129,13 @@ const PostItem: React.FC<PostItemProps> = ({
           borderColor="#444"
           _hover={{ bg: "rgba(102,122,128,0.10196078431372549)" }}
           cursor="pointer"
+          onClick={(event) => onSavePost(event, post)}
         >
           <Icon
             as={IoBookmark}
             mr={1}
             fontSize={{ base: "11pt", sm: "15pt" }}
-            color="#777"
+            color={isSaved ? "#e53935" : "rgb(129, 131, 132)"}
           />
         </Flex>
       </Flex>

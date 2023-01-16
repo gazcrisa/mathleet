@@ -1,4 +1,12 @@
-import { Badge, Button, Flex, IconButton, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  Flex,
+  IconButton,
+  Input,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CountDown from "./CountDown";
 import { Problem } from "../../types/problem";
@@ -6,6 +14,19 @@ import { ProblemType } from "../../enums/problems";
 import Timer from "./Timer";
 import { generateProblems } from "./generateProblems";
 import { VscDebugRestart } from "react-icons/vsc";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
+import { auth, firestore } from "../../firebase/clientApp";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "../../atoms/authModalAtom";
+import { UserScore } from "../../types/user";
 
 type ProblemProps = {
   size: number;
@@ -20,6 +41,10 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [showCountDown, setShowCountDown] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalState);
 
   const getLevelText = (size: number): string => {
     switch (size) {
@@ -67,11 +92,36 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
     setIsFinished(true);
   };
 
-  const onSave = () => {
-    // if (!user) {
-    //   setAuthModalState({ open: true, view: "login" });
-    //   return;
-    // }
+  const onSave = async () => {
+    console.log("calling save score");
+
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const userScoresRef = doc(
+        collection(firestore, "users", `${user?.uid}/userScores`)
+      );
+
+      const newScore: UserScore = {
+        id: userScoresRef.id,
+        score,
+        level: getLevelText(size),
+        type,
+        createdAt: serverTimestamp() as Timestamp,
+      };
+
+      await setDoc(userScoresRef, newScore);
+      setSaveSuccess(true);
+    } catch (error: any) {
+      console.log("onSaveScore error", error.message);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -83,6 +133,7 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
     setShowProblem(false);
     setShowCountDown(true);
     setIsFinished(false);
+    setSaveSuccess(false);
     setScore(0);
   };
 
@@ -131,10 +182,28 @@ const Problem: React.FC<ProblemProps> = ({ size, hasNegatives, type }) => {
             <Text fontSize="20px">
               Your Score: {score} answered in 2 minutes
             </Text>
-            <Flex justifyContent="center">
-              <Button colorScheme="blue" mr={3} onClick={onSave}>
+            <Flex justifyContent="center" align="center" direction="column">
+              <Button
+                colorScheme="blue"
+                mr={3}
+                variant="outline"
+                width="120px"
+                onClick={onSave}
+                isLoading={loading}
+              >
                 Save Score
               </Button>
+              {saveSuccess && (
+                <Text
+                  mt={4}
+                  fontWeight={500}
+                  fontSize="14px"
+                  textAlign="center"
+                  color="#aaaaaa"
+                >
+                  Your score was saved!
+                </Text>
+              )}
             </Flex>
           </Stack>
         )}

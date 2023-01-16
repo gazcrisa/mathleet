@@ -1,20 +1,27 @@
 import { Stack } from "@chakra-ui/react";
-import { User } from "firebase/auth";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../../firebase/clientApp";
 import usePosts from "../../hooks/usePosts";
+import useUser from "../../hooks/useUser";
 import { Post } from "../../types";
 import PostItem from "./PostItem";
 import PostLoader from "./PostLoader";
 
-
 const Posts: React.FC = () => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const { postStateValue, setPostStateValue, onLike, onDeletePost, onSelectPost } =
-    usePosts();
+
+  const {
+    postStateValue,
+    setPostStateValue,
+    onLike,
+    onDeletePost,
+    onSelectPost,
+  } = usePosts();
+
+  const {onSavePost} = useUser();
 
   const getPosts = async () => {
     console.log("getPosts");
@@ -56,6 +63,7 @@ const Posts: React.FC = () => {
               onLike={onLike}
               onDeletePost={onDeletePost}
               onSelectPost={onSelectPost}
+              onSavePost={onSavePost}
             />
           ))}
         </Stack>

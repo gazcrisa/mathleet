@@ -18,14 +18,12 @@ const SubmitPostPage: React.FC<SubmitPostPageProps> = () => {
       setAuthModalState({ open: true, view: "login" });
       return;
     }
-  }, [user])
+  }, [user]);
 
   return (
     <PageContent>
       <>
-        <Flex direction="column">
-          {user && <NewPostForm user={user} />}
-        </Flex>
+        <Flex direction="column">{user && <NewPostForm user={user} />}</Flex>
       </>
       <></>
     </PageContent>

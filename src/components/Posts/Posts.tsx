@@ -21,7 +21,7 @@ const Posts: React.FC = () => {
     onSelectPost,
   } = usePosts();
 
-  const {onSavePost} = useUser();
+  const { onSavePost } = useUser();
 
   const getPosts = async () => {
     console.log("getPosts");
@@ -54,21 +54,30 @@ const Posts: React.FC = () => {
         <PostLoader />
       ) : (
         <>
-        <Box bg="#1c1c1c"><Text ml={3} mt={2} fontSize={{base: "18px", md: "20px"}} color="#aaaaaa">Recent Discussions</Text></Box>
-        <Stack spacing={{ base: "1", md: "2" }}>
-          {postStateValue.posts.map((p: Post) => (
-            <PostItem
-              key={p.id}
-              post={p}
-              userIsCreator={user?.uid === p.creatorId}
-              userLiked={p.likes.includes(user?.uid!)}
-              onLike={onLike}
-              onDeletePost={onDeletePost}
-              onSelectPost={onSelectPost}
-              onSavePost={onSavePost}
-            />
-          ))}
-        </Stack>
+          <Box bg="#1c1c1c">
+            <Text
+              ml={3}
+              mt={2}
+              fontSize={{ base: "18px", md: "20px" }}
+              color="#aaaaaa"
+            >
+              Recent Discussions
+            </Text>
+          </Box>
+          <Stack spacing={{ base: "1", md: "2" }}>
+            {postStateValue.posts.map((p: Post) => (
+              <PostItem
+                key={p.id}
+                post={p}
+                userIsCreator={user?.uid === p.creatorId}
+                userLiked={p.likes.includes(user?.uid!)}
+                onLike={onLike}
+                onDeletePost={onDeletePost}
+                onSelectPost={onSelectPost}
+                onSavePost={onSavePost}
+              />
+            ))}
+          </Stack>
         </>
       )}
     </>

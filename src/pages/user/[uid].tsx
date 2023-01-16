@@ -1,9 +1,16 @@
-import { Box, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+} from "@chakra-ui/react";
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PageContent from "../../components/Layout/PageContent";
+import ReversePageContent from "../../components/Layout/ReversePageContent";
 import PageNotFound from "../../components/PageNotFound";
 import PostLoader from "../../components/Posts/PostLoader";
 import ProfilePanel from "../../components/Profile/ProfilePanel";
@@ -112,7 +119,17 @@ const UserPage: React.FC = () => {
           </>
         </PageContent>
       ) : (
-        <PostLoader />
+        <PageContent widthPercentage="45%">
+          <>
+            <Box padding="10px 10px" boxShadow="lg" bg="#222" borderRadius={4}>
+              <SkeletonCircle size="20" />
+              <SkeletonText mt="4" noOfLines={6} spacing="4" />
+            </Box>
+          </>
+          <>
+            <PostLoader />
+          </>
+        </PageContent>
       )}
     </>
   );

@@ -3,6 +3,7 @@ import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import PageContent from "../../components/Layout/PageContent";
 import ReversePageContent from "../../components/Layout/ReversePageContent";
 import PageNotFound from "../../components/PageNotFound";
 import PostLoader from "../../components/Posts/PostLoader";
@@ -87,22 +88,22 @@ const UserPage: React.FC = () => {
       {!userExists ? (
         <PageNotFound message="Sorry, that user was not found." />
       ) : !loading && userStateValue.selectedUser ? (
-        <ReversePageContent>
+        <PageContent widthPercentage="45%">
           <>
-            <Stack>
-              <ProfilePanel
-                isCurrentUser={user?.uid === userStateValue.selectedUser.uid}
-                selectedUser={userStateValue.selectedUser}
-              />
-            </Stack>
-          </>
-          <>
-            <Box display={{ md: "none" }} mb={2}>
-              <ProfilePanel
-                isCurrentUser={user?.uid === userStateValue.selectedUser.uid}
-                selectedUser={userStateValue.selectedUser}
+            <ProfilePanel
+              isCurrentUser={user?.uid === userStateValue.selectedUser.uid}
+              selectedUser={userStateValue.selectedUser}
+            />
+            <Box display={{ md: "none" }}>
+              <UserStats
+                scores={scores}
+                recentPosts={posts}
+                isCurrentUser={user?.uid === userStateValue.selectedUser?.uid}
+                currentUserUID={user?.uid}
               />
             </Box>
+          </>
+          <>
             <UserStats
               scores={scores}
               recentPosts={posts}
@@ -110,7 +111,7 @@ const UserPage: React.FC = () => {
               currentUserUID={user?.uid}
             />
           </>
-        </ReversePageContent>
+        </PageContent>
       ) : (
         <PostLoader />
       )}

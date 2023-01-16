@@ -8,6 +8,7 @@ import {
   Tbody,
   Td,
   Tfoot,
+  TableContainer,
 } from "@chakra-ui/react";
 import React from "react";
 import { UserScore } from "../../types/user";
@@ -22,6 +23,7 @@ const HighScoresTable: React.FC<HighScoresTableProps> = ({ scores }) => {
   return (
     <Flex bg="#1c1c1c" direction="column">
       <Header title="Top Scores" bgColor="blue.500" />
+      <TableContainer>
       <Table color="#aaaaaa" variant="simple" colorScheme="whiteAlpha">
         {!scores.length && (
           <TableCaption color="gray.600">
@@ -52,6 +54,7 @@ const HighScoresTable: React.FC<HighScoresTableProps> = ({ scores }) => {
         </Tbody>
         <Tfoot />
       </Table>
+      </TableContainer>
     </Flex>
   );
 };

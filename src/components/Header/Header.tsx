@@ -10,13 +10,14 @@ type BlueHeaderProps = {
 const BlueHeader: React.FC<BlueHeaderProps> = ({title, bgColor, textColor}) => {
   return (
     <Flex
-      align="flex-end"
+      align={{base: "center", md: "flex-end"}}
+      justify={{base: "center"}}
       color={textColor ? textColor : "white"}
       width="100%"
       p="6px 10px"
       bg={bgColor ? bgColor : "blue.500"}
       height="34px"
-      borderRadius="4px 4px 0px 0px"
+      borderRadius={{base: "0px", md: "4px 4px 0px 0px"}}
       fontWeight={600}
       backgroundSize="cover"
     >

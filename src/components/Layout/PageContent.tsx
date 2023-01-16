@@ -3,15 +3,23 @@ import React, { ReactNode } from "react";
 
 type PageContentProps = {
   children: ReactNode;
+  widthPercentage?: string;
 };
 
-const PageContent: React.FC<PageContentProps> = ({ children }) => {
+const PageContent: React.FC<PageContentProps> = ({
+  children,
+  widthPercentage,
+}) => {
+  const getWidth = () => {
+    return widthPercentage ? widthPercentage : "85%";
+  };
+  
   return (
-    <Flex justify="center" p={{base: "4px 0px", md: "12px 0px"}}>
+    <Flex justify="center" p={{ base: "4px 0px", md: "12px 0px" }}>
       <Flex width="100%" justify="center" maxWidth="860px">
         <Flex
           direction="column"
-          width={{ base: "100%", md: "85%" }}
+          width={{ base: "100%", md: `${getWidth()}` }}
           mr={{ base: 0, md: 6 }}
         >
           {children && children[0 as keyof typeof children]}

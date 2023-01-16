@@ -1,10 +1,4 @@
-import {
-  Button,
-  Flex,
-  Stack,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Flex, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import { ANONYMOUS, UNKNOWN } from "../../constants";
 import { User } from "../../types/user";
 import EditProfileModal from "./EditProfileModal";
@@ -25,11 +19,11 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({
     <Flex
       direction="column"
       bg="#1c1c1c"
-      borderRadius={4}
+      borderRadius={{base: 4, md: 0}}
       border="none"
-      position="sticky"
       width="100%"
       padding="18px"
+      mb={{ base: "2", md: "0" }}
     >
       <Flex direction="column">
         <Stack direction="row" spacing={4} align="center">

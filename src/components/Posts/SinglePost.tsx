@@ -97,7 +97,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
           <Text fontSize="16pt">{post.title}</Text>
           <Stack spacing={0.5}>
             <Flex>
-              <Text color="#aaaaaa" fontSize="10pt">Posted by</Text>
+              <Text color="#777" fontSize="10pt">Posted by</Text>
               <Button
                 ml={1}
                 fontSize="10pt"

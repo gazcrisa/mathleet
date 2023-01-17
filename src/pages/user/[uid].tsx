@@ -1,16 +1,9 @@
-import {
-  Box,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PageContent from "../../components/Layout/PageContent";
-import ReversePageContent from "../../components/Layout/ReversePageContent";
 import PageNotFound from "../../components/PageNotFound";
 import PostLoader from "../../components/Posts/PostLoader";
 import ProfilePanel from "../../components/Profile/ProfilePanel";
@@ -94,7 +87,7 @@ const UserPage: React.FC = () => {
       {!userExists ? (
         <PageNotFound message="Sorry, that user was not found." />
       ) : !loading && userStateValue.selectedUser ? (
-        <PageContent widthPercentage="45%">
+        <PageContent widthPercentage="35%">
           <>
             <ProfilePanel
               isCurrentUser={user?.uid === userStateValue.selectedUser.uid}
@@ -119,7 +112,7 @@ const UserPage: React.FC = () => {
           </>
         </PageContent>
       ) : (
-        <PageContent widthPercentage="45%">
+        <PageContent widthPercentage="35%">
           <>
             <Box padding="10px 10px" boxShadow="lg" bg="#222" borderRadius={4}>
               <SkeletonCircle size="20" />

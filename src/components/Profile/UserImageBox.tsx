@@ -13,8 +13,8 @@ const UserImageBox: React.FC<UserImageBoxProps> = ({
   console.log("user image box", imageURL, selectedFile)
   return (
     <Flex
-      height="6rem"
-      width="6rem"
+      height="4rem"
+      width="4rem"
       borderRadius="4px"
       align="center"
       justify="center"

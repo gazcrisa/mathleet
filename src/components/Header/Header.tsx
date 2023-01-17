@@ -17,7 +17,6 @@ const BlueHeader: React.FC<BlueHeaderProps> = ({title, bgColor, textColor}) => {
       p="6px 10px"
       bg={bgColor ? bgColor : "blue.500"}
       height="34px"
-      borderRadius={{base: "0px", md: "4px 4px 0px 0px"}}
       fontWeight={600}
       backgroundSize="cover"
     >

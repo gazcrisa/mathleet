@@ -45,7 +45,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
     setLoading(true);
     try {
       // write the new post to the db
-      await addDoc(collection(firestore, "posts"), {
+      const newPost = await addDoc(collection(firestore, "posts"), {
         creatorId: user.uid,
         creatorDisplayName: user.displayName ? user.displayName : 'Anonymous',
         title:
@@ -56,8 +56,8 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
         createdAt: serverTimestamp() as Timestamp,
       });
 
-      // redirect the user back to the home page using the router
-      router.back();
+
+      router.push(`/posts/${newPost.id}`);
     } catch (error: any) {
       console.log("handleCreatePost error", error.message);
       setError(true);

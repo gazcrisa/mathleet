@@ -66,8 +66,9 @@ const PostItem: React.FC<PostItemProps> = ({
               paddingTop="8px"
             >
               <Text marginRight={1} fontSize="10pt">
-                Posted by {post.creatorDisplayName}
+                Posted by 
               </Text>
+              <Text fontSize="10pt" color="brand.100">{post.creatorDisplayName}</Text>
             </Flex>
             <Text fontSize="16pt">{post.title}</Text>
             <Flex className="post-item-container" maxHeight={"250px"}>
